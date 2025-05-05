@@ -53,20 +53,6 @@ A comprehensive university application platform for Kazakhstan, similar to Commo
 - `dashboard/` - User and admin dashboards
 - `core/` - Common utilities and shared functionality
 
-## Development Plan
-
-The project follows a 9-week development plan, with each week focusing on specific features:
-
-- Week 3: User Authentication & Profile Management
-- Week 4: Application Form Submission
-- Week 5: Document Upload & Verification
-- Week 6: Smart Autofill for Application Forms
-- Week 7: Real-Time Application Status Tracking
-- Week 8: AI-Powered University Recommendations
-- Week 9: One-Click Apply to Multiple Universities
-- Week 10: Scholarship & Financial Aid Matching
-- Week 11: Personalized Dashboard with Deadlines & Reminders
-
 ## Contributing
 
 Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
