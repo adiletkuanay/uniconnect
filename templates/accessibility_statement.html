@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Accessibility Statement - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-4 mb-4">Accessibility Statement</h1>
+            <p class="lead mb-4">Last updated: {{ current_date|date:"F d, Y" }}</p>
+
+            <!-- Introduction -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">1. Our Commitment</h2>
+                <p>UniConnect is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards.</p>
+            </section>
+
+            <!-- Standards -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">2. Standards Compliance</h2>
+                <p>We aim to meet the following accessibility standards:</p>
+                <ul>
+                    <li>Web Content Accessibility Guidelines (WCAG) 2.1 Level AA</li>
+                    <li>Section 508 of the Rehabilitation Act</li>
+                    <li>Americans with Disabilities Act (ADA)</li>
+                </ul>
+            </section>
+
+            <!-- Features -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">3. Accessibility Features</h2>
+                <p>Our platform includes the following accessibility features:</p>
+                <ul>
+                    <li>Keyboard navigation support</li>
+                    <li>Screen reader compatibility</li>
+                    <li>Alternative text for images</li>
+                    <li>High contrast mode</li>
+                    <li>Resizable text</li>
+                    <li>Clear and consistent navigation</li>
+                    <li>Descriptive link text</li>
+                </ul>
+            </section>
+
+            <!-- Assistive Technologies -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">4. Assistive Technologies</h2>
+                <p>Our platform is compatible with the following assistive technologies:</p>
+                <ul>
+                    <li>Screen readers (JAWS, NVDA, VoiceOver)</li>
+                    <li>Screen magnifiers</li>
+                    <li>Speech recognition software</li>
+                    <li>Keyboard-only navigation</li>
+                </ul>
+            </section>
+
+            <!-- Limitations -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">5. Known Limitations</h2>
+                <p>While we strive to ensure accessibility, there may be some limitations:</p>
+                <ul>
+                    <li>Some third-party content may not be fully accessible</li>
+                    <li>Older PDF documents may not be fully accessible</li>
+                    <li>Some complex data visualizations may be challenging to access</li>
+                </ul>
+            </section>
+
+            <!-- Feedback -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">6. Feedback and Support</h2>
+                <p>We welcome your feedback on the accessibility of our platform. Please let us know if you encounter accessibility barriers:</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope me-2"></i>accessibility@uniconnect.com</li>
+                    <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                    <li><i class="fas fa-map-marker-alt me-2"></i>123 Accessibility Street, Inclusion City, IC 12345</li>
+                </ul>
+            </section>
+
+            <!-- Technical Information -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">7. Technical Information</h2>
+                <p>Our platform relies on the following technologies for accessibility:</p>
+                <ul>
+                    <li>HTML</li>
+                    <li>WAI-ARIA</li>
+                    <li>CSS</li>
+                    <li>JavaScript</li>
+                </ul>
+            </section>
+
+            <!-- Assessment -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">8. Assessment Approach</h2>
+                <p>We assess the accessibility of our platform through:</p>
+                <ul>
+                    <li>Automated testing tools</li>
+                    <li>Manual testing by accessibility experts</li>
+                    <li>User testing with people with disabilities</li>
+                    <li>Regular accessibility audits</li>
+                </ul>
+            </section>
+
+            <!-- Updates -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">9. Updates to This Statement</h2>
+                <p>We will review and update this accessibility statement regularly. We welcome your feedback on how to improve accessibility on our platform.</p>
+            </section>
+
+            <!-- Contact -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">10. Contact Us</h2>
+                <p>If you wish to report an accessibility issue, have any questions, or need assistance, please contact our accessibility team:</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope me-2"></i>accessibility@uniconnect.com</li>
+                    <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                    <li><i class="fas fa-map-marker-alt me-2"></i>123 Accessibility Street, Inclusion City, IC 12345</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</div>
+
+<style>
+section {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 2rem;
+}
+
+section:last-child {
+    border-bottom: none;
+}
+
+h2 {
+    color: #333;
+}
+
+ul {
+    padding-left: 1.5rem;
+}
+
+.list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %} 

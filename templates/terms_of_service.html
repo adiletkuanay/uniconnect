@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms of Service - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-4 mb-4">Terms of Service</h1>
+            <p class="lead mb-4">Last updated: {{ current_date|date:"F d, Y" }}</p>
+
+            <!-- Introduction -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">1. Introduction</h2>
+                <p>Welcome to UniConnect. By accessing or using our platform, you agree to be bound by these Terms of Service. Please read these terms carefully before using our services.</p>
+            </section>
+
+            <!-- Definitions -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">2. Definitions</h2>
+                <ul>
+                    <li>"Platform" refers to the UniConnect website and services</li>
+                    <li>"User" refers to any individual or entity using our platform</li>
+                    <li>"Content" refers to any information, text, graphics, or other materials uploaded to the platform</li>
+                    <li>"Services" refers to all features and functionality provided by UniConnect</li>
+                </ul>
+            </section>
+
+            <!-- Account Terms -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">3. Account Terms</h2>
+                <p>To use our platform, you must:</p>
+                <ul>
+                    <li>Be at least 13 years of age</li>
+                    <li>Provide accurate and complete information</li>
+                    <li>Maintain the security of your account</li>
+                    <li>Be responsible for all activities under your account</li>
+                </ul>
+            </section>
+
+            <!-- User Responsibilities -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">4. User Responsibilities</h2>
+                <p>You agree to:</p>
+                <ul>
+                    <li>Provide accurate and truthful information</li>
+                    <li>Comply with all applicable laws and regulations</li>
+                    <li>Respect the intellectual property rights of others</li>
+                    <li>Not engage in any fraudulent or illegal activities</li>
+                    <li>Not interfere with the proper functioning of the platform</li>
+                </ul>
+            </section>
+
+            <!-- Content Guidelines -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">5. Content Guidelines</h2>
+                <p>When submitting content to our platform, you agree that:</p>
+                <ul>
+                    <li>You own or have the necessary rights to the content</li>
+                    <li>The content is accurate and not misleading</li>
+                    <li>The content does not violate any laws or rights of others</li>
+                    <li>You grant us a license to use the content for platform purposes</li>
+                </ul>
+            </section>
+
+            <!-- Application Process -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">6. Application Process</h2>
+                <p>Regarding the application process:</p>
+                <ul>
+                    <li>We facilitate the application process but do not guarantee admission</li>
+                    <li>Application fees are non-refundable unless otherwise stated</li>
+                    <li>You are responsible for meeting all application requirements</li>
+                    <li>We may verify the authenticity of submitted documents</li>
+                </ul>
+            </section>
+
+            <!-- Privacy and Data Protection -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">7. Privacy and Data Protection</h2>
+                <p>We handle your personal information in accordance with our Privacy Policy. By using our platform, you consent to our collection and use of your information as described in the Privacy Policy.</p>
+            </section>
+
+            <!-- Intellectual Property -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">8. Intellectual Property</h2>
+                <p>All content and materials on our platform, including but not limited to text, graphics, logos, and software, are the property of UniConnect or its licensors and are protected by intellectual property laws.</p>
+            </section>
+
+            <!-- Limitation of Liability -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">9. Limitation of Liability</h2>
+                <p>To the maximum extent permitted by law, UniConnect shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of or inability to use the platform.</p>
+            </section>
+
+            <!-- Termination -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">10. Termination</h2>
+                <p>We may terminate or suspend your account and access to the platform immediately, without prior notice or liability, for any reason, including if you breach these Terms of Service.</p>
+            </section>
+
+            <!-- Changes to Terms -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">11. Changes to Terms</h2>
+                <p>We reserve the right to modify these terms at any time. We will notify users of any material changes. Your continued use of the platform after such changes constitutes your acceptance of the new terms.</p>
+            </section>
+
+            <!-- Governing Law -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">12. Governing Law</h2>
+                <p>These Terms of Service shall be governed by and construed in accordance with the laws of [Jurisdiction], without regard to its conflict of law provisions.</p>
+            </section>
+
+            <!-- Contact Information -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">13. Contact Information</h2>
+                <p>If you have any questions about these Terms of Service, please contact us:</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope me-2"></i>legal@uniconnect.com</li>
+                    <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                    <li><i class="fas fa-map-marker-alt me-2"></i>123 Legal Street, Compliance City, CC 12345</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</div>
+
+<style>
+section {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 2rem;
+}
+
+section:last-child {
+    border-bottom: none;
+}
+
+h2 {
+    color: #333;
+}
+
+ul {
+    padding-left: 1.5rem;
+}
+
+.list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %} 

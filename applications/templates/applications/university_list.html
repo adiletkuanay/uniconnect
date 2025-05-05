@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Universities</h1>
+        <div>
+            <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sortModal">
+                <i class="fas fa-sort"></i> Sort
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for university in universities %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{{ university.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-map-marker-alt text-muted"></i>
+                        <span class="ms-2">{{ university.location }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-globe text-muted"></i>
+                        <a href="{{ university.website }}" target="_blank" class="ms-2">Visit Website</a>
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-envelope text-muted"></i>
+                        <a href="mailto:{{ university.contact_email }}" class="ms-2">Contact</a>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Available Programs</h6>
+                        <ul class="list-unstyled">
+                            {% for program in university.programs.all|slice:":3" %}
+                            <li>
+                                <i class="fas fa-graduation-cap text-muted"></i>
+                                {{ program.title }}
+                            </li>
+                            {% endfor %}
+                            {% if university.programs.count > 3 %}
+                            <li class="text-muted">+{{ university.programs.count|add:"-3" }} more programs</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'university_detail' university.id %}" class="btn btn-primary w-100">
+                        <i class="fas fa-info-circle"></i> View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No universities found matching your criteria.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Filter Modal -->
+    <div class="modal fade" id="filterModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Filter Universities</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="get">
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <select class="form-select" name="location">
+                                <option value="">All Locations</option>
+                                {% for location in locations %}
+                                <option value="{{ location }}">{{ location }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Program Type</label>
+                            <select class="form-select" name="program_type">
+                                <option value="">All Types</option>
+                                {% for type in program_types %}
+                                <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Language</label>
+                            <select class="form-select" name="language">
+                                <option value="">All Languages</option>
+                                {% for lang in languages %}
+                                <option value="{{ lang }}">{{ lang }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sort Modal -->
+    <div class="modal fade" id="sortModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sort Universities</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="get">
+                        <div class="mb-3">
+                            <label class="form-label">Sort By</label>
+                            <select class="form-select" name="sort">
+                                <option value="name">Name (A-Z)</option>
+                                <option value="-name">Name (Z-A)</option>
+                                <option value="location">Location (A-Z)</option>
+                                <option value="-location">Location (Z-A)</option>
+                                <option value="programs_count">Number of Programs</option>
+                                <option value="-programs_count">Number of Programs (Descending)</option>
+                            </select>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Apply Sort</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+{% load application_filters %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Welcome, {{ user.get_full_name|default:user.username }}!</h1>
+            
+            {% if user.role in 'university_admin,system_admin'|split:',' %}
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">Universities</h2>
+                        {% if user.role == 'system_admin' or not user.university %}
+                            <a href="{% url 'universities:university_create' %}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Create University
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        {% if universities %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Location</th>
+                                            <th>Website</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for university in universities %}
+                                            <tr>
+                                                <td>{{ university.name }}</td>
+                                                <td>{{ university.city }}</td>
+                                                <td><a href="{{ university.website }}" target="_blank">{{ university.website }}</a></td>
+                                                <td>
+                                                    <a href="{% url 'universities:university_detail' university.id %}" class="btn btn-sm btn-info">
+                                                        <i class="fas fa-eye"></i> View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <p>No universities found.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if user.role == 'system_admin' or user.role == 'university_admin' %}
+                <!-- University Management Section -->
+                <!-- <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{% trans "University Management" %}</h5>
+                        {% if user.role == 'system_admin' or not user.university %}
+                        <a href="{% url 'universities:university_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> {% trans "Add University" %}
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans "Name" %}</th>
+                                        <th>{% trans "Location" %}</th>
+                                        <th>{% trans "Programs" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for university in universities %}
+                                    <tr>
+                                        <td>{{ university.name }}</td>
+                                        <td>{{ university.city }}</td>
+                                        <td>{{ university.programs.count }}</td>
+                                        <td>
+                                            <a href="{% url 'universities:university_detail' university.id %}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if user.role == 'system_admin' or user.university == university %}
+                                            <a href="{% url 'universities:university_update' university.id %}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            {% if user.role == 'university_admin' and not user.university %}
+                                                {% trans "You haven't been assigned to any university yet. Please add your university." %}
+                                            {% else %}
+                                                {% trans "No universities found." %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Program Management Section -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{% trans "Program Management" %}</h5>
+                        <a href="{% url 'applications:program_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> {% trans "Add Program" %}
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans "Name" %}</th>
+                                        <th>{% trans "University" %}</th>
+                                        <th>{% trans "Applications" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for program in programs %}
+                                    <tr>
+                                        <td>{{ program.title }}</td>
+                                        <td>{{ program.university.name }}</td>
+                                        <td>{{ program.applications.count }}</td>
+                                        <td>
+                                            <a href="{% url 'applications:program_detail' program.id %}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if user.role == 'system_admin' or user.university == program.university %}
+                                            <a href="{% url 'applications:program_update' program.id %}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">{% trans "No programs found." %}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Application Tracking Section (for all users) -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{% trans "Application Tracker" %}</h5>
+                    {% if user.role == 'student' %}
+                    <a href="{% url 'applications:program_list' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> {% trans "Apply to Program" %}
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if user.role == 'student' %}
+                        <!-- Status Filter Tabs -->
+                        <div class="mb-4">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#all">All ({{ applications.count }})</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#in-progress">In Progress ({{ applications|filter_by_status:"pending"|length }})</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#accepted">Accepted ({{ applications|filter_by_status:"approved"|length }})</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#rejected">Rejected ({{ applications|filter_by_status:"rejected"|length }})</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Applications Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans "Program" %}</th>
+                                        <th>{% trans "University" %}</th>
+                                        <th>{% trans "Status" %}</th>
+                                        <th>{% trans "Submitted" %}</th>
+                                        <th>{% trans "Actions" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in applications|slice:":5" %}
+                                    <tr>
+                                        <td>{{ application.program.title }}</td>
+                                        <td>{{ application.program.university.name }}</td>
+                                        <td>
+                                            <span class="badge {% if application.status == 'pending' %}bg-warning text-dark
+                                                      {% elif application.status == 'approved' %}bg-success text-white
+                                                      {% elif application.status == 'rejected' %}bg-danger text-white
+                                                      {% else %}bg-secondary text-white{% endif %}">
+                                                {{ application.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>{{ application.created_at|date:"M d, Y" }}</td>
+                                        <td>
+                                            <a href="{% url 'applications:application_detail' application.id %}" class="btn btn-sm btn-info text-white">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            <p class="mb-3">{% trans "You haven't submitted any applications yet." %}</p>
+                                            <a href="{% url 'applications:program_list' %}" class="btn btn-primary">
+                                                <i class="fas fa-plus"></i> {% trans "Browse Programs" %}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if applications.count > 5 %}
+                        <div class="text-center mt-3">
+                            <a href="{% url 'applications:application_list' %}" class="btn btn-outline-primary">
+                                {% trans "View All Applications" %}
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <!-- University Admin View -->
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card bg-primary text-white mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{% trans "Total Applications" %}</h6>
+                                        <h2 class="card-text">{{ applications.count }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-dark mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{% trans "Pending" %}</h6>
+                                        <h2 class="card-text">{{ applications|filter_by_status:"pending"|length }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{% trans "Approved" %}</h6>
+                                        <h2 class="card-text">{{ applications|filter_by_status:"approved"|length }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-danger text-white mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{% trans "Rejected" %}</h6>
+                                        <h2 class="card-text">{{ applications|filter_by_status:"rejected"|length }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'applications:application_list' %}" class="btn btn-outline-primary">
+                                {% trans "Manage Applications" %}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .table th {
+        background-color: #f8f9fa;
+    }
+    .badge {
+        font-size: 0.9em;
+        padding: 0.5em 0.7em;
+    }
+    .btn-sm {
+        margin: 0 2px;
+    }
+    .nav-pills .nav-link {
+        color: #495057;
+        margin-right: 0.5rem;
+    }
+    .nav-pills .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,0,0,.03);
+    }
+</style>
+{% endblock %} 

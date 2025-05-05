@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+
+{% block title %}Frequently Asked Questions - UniConnect{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4 mb-4">FAQ</h1>
+                <p class="lead">Find answers to common questions about our platform and services.</p>
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'images/faq-hero.svg' %}" alt="FAQ" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Section -->
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="input-group">
+                <input type="text" class="form-control" id="faqSearch" placeholder="Search questions...">
+                <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Categories -->
+<div class="container py-5">
+    <div class="row">
+        <!-- General Questions -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <i class="fas fa-question-circle text-primary me-2"></i>General Questions
+                    </h2>
+                    <div class="accordion" id="generalAccordion">
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#general1">
+                                    What is UniConnect?
+                                </button>
+                            </h3>
+                            <div id="general1" class="accordion-collapse collapse show" data-bs-parent="#generalAccordion">
+                                <div class="accordion-body">
+                                    UniConnect is a platform that connects international students with universities worldwide, providing a streamlined application process and comprehensive support throughout the journey.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#general2">
+                                    How do I create an account?
+                                </button>
+                            </h3>
+                            <div id="general2" class="accordion-collapse collapse" data-bs-parent="#generalAccordion">
+                                <div class="accordion-body">
+                                    Click the "Sign Up" button on the top right corner, fill in your details, verify your email, and you're ready to start your journey!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Process -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <i class="fas fa-file-alt text-primary me-2"></i>Application Process
+                    </h2>
+                    <div class="accordion" id="applicationAccordion">
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#app1">
+                                    How do I start my application?
+                                </button>
+                            </h3>
+                            <div id="app1" class="accordion-collapse collapse show" data-bs-parent="#applicationAccordion">
+                                <div class="accordion-body">
+                                    Browse programs, select your desired program, and click "Apply Now". Follow the step-by-step process to complete your application.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#app2">
+                                    What documents do I need?
+                                </button>
+                            </h3>
+                            <div id="app2" class="accordion-collapse collapse" data-bs-parent="#applicationAccordion">
+                                <div class="accordion-body">
+                                    Required documents vary by program but typically include academic transcripts, language test scores, personal statement, and recommendation letters.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Program Selection -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <i class="fas fa-graduation-cap text-primary me-2"></i>Program Selection
+                    </h2>
+                    <div class="accordion" id="programAccordion">
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#program1">
+                                    How do I choose the right program?
+                                </button>
+                            </h3>
+                            <div id="program1" class="accordion-collapse collapse show" data-bs-parent="#programAccordion">
+                                <div class="accordion-body">
+                                    Use our program search filters to find programs matching your interests, academic background, and career goals. You can also compare programs side by side.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#program2">
+                                    Can I apply to multiple programs?
+                                </button>
+                            </h3>
+                            <div id="program2" class="accordion-collapse collapse" data-bs-parent="#programAccordion">
+                                <div class="accordion-body">
+                                    Yes, you can apply to multiple programs. Each application will be processed separately, and you'll need to submit the required documents for each program.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Matters -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <i class="fas fa-dollar-sign text-primary me-2"></i>Financial Matters
+                    </h2>
+                    <div class="accordion" id="financialAccordion">
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#finance1">
+                                    What are the application fees?
+                                </button>
+                            </h3>
+                            <div id="finance1" class="accordion-collapse collapse show" data-bs-parent="#financialAccordion">
+                                <div class="accordion-body">
+                                    Application fees vary by program and university. You'll see the exact fee when you start your application. Some programs may waive fees for early applications.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#finance2">
+                                    Are scholarships available?
+                                </button>
+                            </h3>
+                            <div id="finance2" class="accordion-collapse collapse" data-bs-parent="#financialAccordion">
+                                <div class="accordion-body">
+                                    Many programs offer scholarships. You can filter programs by scholarship availability and check the specific scholarship requirements for each program.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Still Have Questions? -->
+<div class="bg-light py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Still Have Questions?</h2>
+        <p class="lead mb-4">Can't find what you're looking for? Our support team is here to help.</p>
+        <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">Contact Support</a>
+    </div>
+</div>
+
+<style>
+.accordion-button:not(.collapsed) {
+    background-color: #f8f9fa;
+    color: #0d6efd;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+#faqSearch {
+    border-radius: 0.25rem 0 0 0.25rem;
+}
+
+#faqSearch + .btn {
+    border-radius: 0 0.25rem 0.25rem 0;
+}
+</style>
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // FAQ Search functionality
+    $('#faqSearch').on('keyup', function() {
+        const searchText = $(this).val().toLowerCase();
+        $('.accordion-item').each(function() {
+            const question = $(this).find('.accordion-button').text().toLowerCase();
+            const answer = $(this).find('.accordion-body').text().toLowerCase();
+            if (question.includes(searchText) || answer.includes(searchText)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

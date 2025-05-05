@@ -1,0 +1,51 @@
+{% extends 'applications/emails/base_email.html' %}
+
+{% block content %}
+<div class="email-content">
+    <h2>Application Status Update</h2>
+    <p>Dear {{ application.student.get_full_name }},</p>
+    
+    <p>The status of your application for <strong>{{ application.program.title }}</strong> at <strong>{{ application.program.university.name }}</strong> has been updated.</p>
+    
+    <div class="status-update">
+        <h3>New Status: 
+            <span class="badge {% if application.status == 'approved' %}bg-success{% elif application.status == 'rejected' %}bg-danger{% elif application.status == 'under_review' %}bg-warning{% else %}bg-primary{% endif %}">
+                {{ application.get_status_display }}
+            </span>
+        </h3>
+        
+        {% if application.status == 'approved' %}
+            <div class="approval-details">
+                <p>Congratulations! Your application has been approved. Here are the next steps:</p>
+                <ol>
+                    <li>Review your acceptance letter</li>
+                    <li>Complete the enrollment process</li>
+                    <li>Submit any required deposits</li>
+                    <li>Register for orientation</li>
+                </ol>
+            </div>
+        {% elif application.status == 'rejected' %}
+            <div class="rejection-details">
+                <p>We regret to inform you that your application has not been successful at this time.</p>
+                {% if application.rejection_reason %}
+                    <p><strong>Reason:</strong> {{ application.rejection_reason }}</p>
+                {% endif %}
+                <p>We encourage you to consider applying again in the future or explore other programs that might be a better fit.</p>
+            </div>
+        {% elif application.status == 'under_review' %}
+            <div class="review-details">
+                <p>Your application is currently under review by our admissions team.</p>
+                <p>We will notify you as soon as a decision has been made.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="cta">
+        <a href="{{ application_url }}" class="button">View Application Details</a>
+    </div>
+
+    <p>If you have any questions about your application status, please contact our admissions office.</p>
+    
+    <p>Best regards,<br>The Admissions Team</p>
+</div>
+{% endblock %} 

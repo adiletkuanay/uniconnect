@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}Compare Programs - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4">Compare Programs</h1>
+            <p class="lead">Compare up to 3 programs side by side to make an informed decision.</p>
+        </div>
+    </div>
+
+    <!-- Program Selection -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Select Programs to Compare</h2>
+                    <form method="get" class="row g-3">
+                        {% for i in "123"|make_list %}
+                        <div class="col-md-4">
+                            <select class="form-select" name="program{{ i }}" id="program{{ i }}">
+                                <option value="">Select Program {{ i }}</option>
+                                {% for program in programs %}
+                                <option value="{{ program.id }}" {% if selected_programs|index:i == program.id %}selected{% endif %}>
+                                    {{ program.title }} - {{ program.university.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endfor %}
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Compare Programs</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if selected_programs %}
+    <!-- Comparison Table -->
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Category</th>
+                            {% for program in selected_programs %}
+                            <th>
+                                <div class="text-center">
+                                    <img src="{{ program.university.logo.url }}" alt="{{ program.university.name }}" class="img-fluid mb-2" style="max-height: 50px;">
+                                    <h5 class="mb-1">{{ program.title }}</h5>
+                                    <p class="text-muted mb-0">{{ program.university.name }}</p>
+                                </div>
+                            </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Basic Information -->
+                        <tr>
+                            <th>Degree Level</th>
+                            {% for program in selected_programs %}
+                            <td>{{ program.degree_level }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Field of Study</th>
+                            {% for program in selected_programs %}
+                            <td>{{ program.field_of_study }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Duration</th>
+                            {% for program in selected_programs %}
+                            <td>{{ program.duration }} months</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Language</th>
+                            {% for program in selected_programs %}
+                            <td>{{ program.language }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Start Date</th>
+                            {% for program in selected_programs %}
+                            <td>{{ program.start_date|date:"F Y" }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Application Deadline</th>
+                            {% for program in selected_programs %}
+                            <td>{{ program.application_deadline|date:"F d, Y" }}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <!-- Requirements -->
+                        <tr>
+                            <th>Minimum GPA</th>
+                            {% for program in selected_programs %}
+                            <td>{{ program.minimum_gpa }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>English Requirement</th>
+                            {% for program in selected_programs %}
+                            <td>{{ program.english_requirement }}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <!-- Financial Information -->
+                        <tr>
+                            <th>Tuition Fee</th>
+                            {% for program in selected_programs %}
+                            <td>${{ program.tuition_fee|intcomma }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Scholarship Available</th>
+                            {% for program in selected_programs %}
+                            <td>
+                                {% if program.scholarship_available %}
+                                <span class="badge bg-success">Yes</span>
+                                {% else %}
+                                <span class="badge bg-secondary">No</span>
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+
+                        <!-- Program Details -->
+                        <tr>
+                            <th>Description</th>
+                            {% for program in selected_programs %}
+                            <td>{{ program.description|truncatewords:50 }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Curriculum Highlights</th>
+                            {% for program in selected_programs %}
+                            <td>
+                                <ul class="list-unstyled">
+                                    {% for highlight in program.curriculum_highlights|slice:":3" %}
+                                    <li><i class="fas fa-check text-success me-2"></i>{{ highlight }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            {% endfor %}
+                        </tr>
+
+                        <!-- Actions -->
+                        <tr>
+                            <th>Actions</th>
+                            {% for program in selected_programs %}
+                            <td>
+                                <a href="{% url 'applications:program_detail' program.id %}" class="btn btn-outline-primary btn-sm me-2">
+                                    View Details
+                                </a>
+                                <a href="{% url 'applications:apply' program.id %}" class="btn btn-primary btn-sm">
+                                    Apply Now
+                                </a>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.table th {
+    background-color: #f8f9fa;
+    vertical-align: middle;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.table img {
+    max-width: 100px;
+}
+
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5em 0.75em;
+}
+</style>
+{% endblock %} 

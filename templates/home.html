@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}UniConnect - Your Gateway to International Education{% endblock %}
+
+{% block content %}
+<section class="hero py-5" style="background-color: #1A3C40; color: white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="display-4 fw-bold mb-4">UniConnect: A comprehensive and user-friendly university application platform</h1>
+                <p class="lead mb-4">Apply to multiple universities, track your status, and access up-to-date information. Compare universities, manage documents, and get expert support—all in one place.</p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'account_login' %}" class="btn btn-warning px-4 py-2" style="background-color: #FFB800; border: none;">Sign in</a>
+                    <a href="#how-it-works" class="btn btn-outline-light px-4 py-2 scroll-link">How it works?</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <img src="{% static 'images/features-frame.png' %}" alt="UniConnect Features" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="how-it-works" class="how-it-works py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works?</h2>
+        <div class="row justify-content-center align-items-center">
+            <div class="col text-center">
+                <img src="{% static 'images/icons/create-account.svg' %}" alt="Create Account" class="how-icon mb-3">
+                <h5>Create an account</h5>
+            </div>
+            <div class="col-auto">
+                <img src="{% static 'images/icons/arrow.svg' %}" alt="Arrow" class="arrow-icon">
+            </div>
+            <div class="col text-center">
+                <img src="{% static 'images/icons/complete-profile.svg' %}" alt="Complete Profile" class="how-icon mb-3">
+                <h5>Complete your profile</h5>
+            </div>
+            <div class="col-auto">
+                <img src="{% static 'images/icons/arrow.svg' %}" alt="Arrow" class="arrow-icon">
+            </div>
+            <div class="col text-center">
+                <img src="{% static 'images/icons/choose-university.svg' %}" alt="Choose University" class="how-icon mb-3">
+                <h5>Choose a university</h5>
+            </div>
+            <div class="col-auto">
+                <img src="{% static 'images/icons/arrow.svg' %}" alt="Arrow" class="arrow-icon">
+            </div>
+            <div class="col text-center">
+                <img src="{% static 'images/icons/submit-application.svg' %}" alt="Submit Application" class="how-icon mb-3">
+                <h5>Submit your<br>application online</h5>
+            </div>
+            <div class="col-auto">
+                <img src="{% static 'images/icons/arrow.svg' %}" alt="Arrow" class="arrow-icon">
+            </div>
+            <div class="col text-center">
+                <img src="{% static 'images/icons/track-status.svg' %}" alt="Track Status" class="how-icon mb-3">
+                <h5>Track your status<br>in your dashboard</h5>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Example Section -->
+<section class="examples py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Example;</h2>
+        <div class="row justify-content-center g-4">
+            <!-- Asem's Example -->
+            <div class="col-md-5">
+                <div class="example-card">
+                    <div class="card-body">
+                        <div class="example-header">
+                            <h5 class="card-title mb-0">Asem - applies to an economics course in Almaty.</h5>
+                        </div>
+                        <div class="example-img-container">
+                            <img src="{% static 'images/asem-example.png' %}" alt="Asem" class="example-img">
+                        </div>
+                        <div class="steps-container">
+                            <div class="step-item mb-3 d-flex align-items-center">
+                                <img src="{% static 'images/icons/signup.svg' %}" alt="Sign up" class="step-icon me-3">
+                                <div class="step-text">Asem signs up on UniConnect</div>
+                            </div>
+                            <div class="step-item mb-3 d-flex align-items-center">
+                                <img src="{% static 'images/icons/document.svg' %}" alt="Documents" class="step-icon me-3">
+                                <div class="step-text">Creates account and add documents</div>
+                            </div>
+                            <div class="step-item mb-3 d-flex align-items-center">
+                                <img src="{% static 'images/icons/send.svg' %}" alt="Send" class="step-icon me-3">
+                                <div class="step-text">Sends applications</div>
+                            </div>
+                            <div class="step-item mb-3 d-flex align-items-center">
+                                <img src="{% static 'images/icons/track.svg' %}" alt="Track" class="step-icon me-3">
+                                <div class="step-text">Tracks her status</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ernar's Example -->
+            <div class="col-md-5">
+                <div class="example-card">
+                    <div class="card-body">
+                        <div class="example-header">
+                            <h5 class="card-title mb-0">Ernar - applies for an IT program in Astana.</h5>
+                        </div>
+                        <div class="example-img-container">
+                            <img src="{% static 'images/ernar-example.png' %}" alt="Ernar" class="example-img">
+                        </div>
+                        <div class="steps-container">
+                            <div class="step-item mb-3 d-flex align-items-center">
+                                <img src="{% static 'images/icons/mobile.svg' %}" alt="Mobile" class="step-icon me-3">
+                                <div class="step-text">Ernar signs in on mobile</div>
+                            </div>
+                            <div class="step-item mb-3 d-flex align-items-center">
+                                <img src="{% static 'images/icons/ai.svg' %}" alt="AI" class="step-icon me-3">
+                                <div class="step-text">Gets AI recommendations</div>
+                            </div>
+                            <div class="step-item mb-3 d-flex align-items-center">
+                                <img src="{% static 'images/icons/complete.svg' %}" alt="Complete" class="step-icon me-3">
+                                <div class="step-text">Completes everything</div>
+                            </div>
+                            <div class="step-item mb-3 d-flex align-items-center">
+                                <img src="{% static 'images/icons/offer.svg' %}" alt="Offer" class="step-icon me-3">
+                                <div class="step-text">Receives offer</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-12 text-center mt-4">
+                <a href="{% url 'users:register' %}" class="btn btn-warning me-3" style="background-color: #FFB800; border: none;">Start now</a>
+                <a href="{% url 'applications:program_list' %}" class="btn btn-outline-primary">Find university</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Programs -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Featured Programs</h2>
+        <div class="row g-4">
+            {% for program in featured_programs %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ program.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ program.university.name }}</h6>
+                        <p class="card-text">{{ program.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-primary">{{ program.degree_level }}</span>
+                            <a href="{% url 'applications:program_detail' program.id %}" class="btn btn-outline-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'applications:program_list' %}" class="btn btn-primary">View All Programs</a>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics -->
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="display-4 fw-bold text-primary">{{ total_programs }}</div>
+                <p class="text-muted">Programs</p>
+            </div>
+            <div class="col-md-3">
+                <div class="display-4 fw-bold text-primary">{{ total_universities }}</div>
+                <p class="text-muted">Universities</p>
+            </div>
+            <div class="col-md-3">
+                <div class="display-4 fw-bold text-primary">{{ total_students }}</div>
+                <p class="text-muted">Students</p>
+            </div>
+            <div class="col-md-3">
+                <div class="display-4 fw-bold text-primary">{{ success_rate }}%</div>
+                <p class="text-muted">Success Rate</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Success Stories</h2>
+        <div class="row">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ testimonial.student.profile_picture.url }}" alt="{{ testimonial.student.name }}" class="rounded-circle me-3" width="50">
+                            <div>
+                                <h5 class="mb-0">{{ testimonial.student.name }}</h5>
+                                <small class="text-muted">{{ testimonial.student.program }} at {{ testimonial.student.university }}</small>
+                            </div>
+                        </div>
+                        <p class="card-text">"{{ testimonial.content }}"</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Start Your Journey?</h2>
+        <p class="lead mb-4">Join thousands of students who have found their perfect international program through UniConnect.</p>
+        <a href="{% url 'users:register' %}" class="btn btn-light btn-lg">Create Your Account</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth scrolling to all links with class 'scroll-link'
+    document.querySelectorAll('.scroll-link').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                // Get the height of the fixed navbar
+                const navbar = document.querySelector('.navbar');
+                const navbarHeight = navbar ? navbar.offsetHeight : 0;
+                
+                // Calculate the target position with offset for the navbar
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

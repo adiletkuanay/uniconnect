@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="mb-0">Application Details</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Program Information</h5>
+                    <p><strong>Program:</strong> {{ application.program.title }}</p>
+                    <p><strong>University:</strong> {{ application.program.university.name }}</p>
+                    <p><strong>Degree Level:</strong> {{ application.program.get_degree_level_display }}</p>
+                    <p><strong>Field of Study:</strong> {{ application.program.field_of_study }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Application Status</h5>
+                    <p>
+                        <strong>Status:</strong>
+                        <span class="badge {% if application.status == 'submitted' %}bg-primary{% elif application.status == 'approved' %}bg-success{% elif application.status == 'rejected' %}bg-danger{% else %}bg-secondary{% endif %}">
+                            {{ application.get_status_display }}
+                        </span>
+                    </p>
+                    <p><strong>Submitted Date:</strong> {{ application.submitted_date|date:"F j, Y" }}</p>
+                    {% if application.status == 'approved' %}
+                        <p><strong>Approval Date:</strong> {{ application.approval_date|date:"F j, Y" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h5>Application Notes</h5>
+                <div class="card">
+                    <div class="card-body">
+                        {% if application.notes %}
+                            {{ application.notes|linebreaks }}
+                        {% else %}
+                            <p class="text-muted">No notes provided.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h5>Required Documents</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Document Type</th>
+                                <th>Status</th>
+                                <th>Upload Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in application.documents.all %}
+                                <tr>
+                                    <td>{{ document.get_document_type_display }}</td>
+                                    <td>
+                                        <span class="badge {% if document.status == 'approved' %}bg-success{% elif document.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %}">
+                                            {{ document.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ document.upload_date|date:"F j, Y" }}</td>
+                                    <td>
+                                        <a href="{{ document.file.url }}" class="btn btn-sm btn-info" target="_blank">View</a>
+                                        {% if application.status == 'draft' %}
+                                            <a href="{% url 'document_update' document.id %}" class="btn btn-sm btn-primary">Update</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No documents uploaded yet.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'application_list' %}" class="btn btn-secondary">Back to List</a>
+                {% if application.status == 'draft' %}
+                    <div>
+                        <a href="{% url 'application_update' application.id %}" class="btn btn-primary">Edit Application</a>
+                        <a href="{% url 'application_submit' application.id %}" class="btn btn-success">Submit Application</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

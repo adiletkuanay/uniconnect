@@ -1,0 +1,173 @@
+/* Custom styles for UniConnect Kazakhstan */
+
+/* General styles */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #2d3748;
+    line-height: 1.6;
+}
+
+/* Hero section */
+.hero {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    padding: 6rem 0;
+    margin-top: -1.5rem;
+}
+
+.hero h1 {
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+/* Cards */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Navigation */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background: #4299e1;
+    border-color: #4299e1;
+}
+
+.btn-primary:hover {
+    background: #3182ce;
+    border-color: #3182ce;
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    color: #4299e1;
+    border-color: #4299e1;
+}
+
+.btn-outline-primary:hover {
+    background: #4299e1;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Stats section */
+.stats .card {
+    padding: 2rem;
+    text-align: center;
+}
+
+.stats .display-4 {
+    font-weight: 700;
+    color: #4299e1;
+}
+
+/* Footer */
+footer {
+    background: #f7fafc;
+    border-top: 1px solid #edf2f7;
+}
+
+footer a {
+    color: #4a5568;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+footer a:hover {
+    color: #4299e1;
+}
+
+/* Forms */
+.form-control {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.form-control:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+/* Custom shadows */
+.shadow-sm {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.shadow-md {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Responsive images */
+.img-fluid {
+    border-radius: 0.5rem;
+}
+
+/* University and program cards */
+.university-card, .program-card {
+    height: 100%;
+}
+
+.university-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Dashboard cards */
+.dashboard-card {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.dashboard-card .card-header {
+    background: #4299e1;
+    color: white;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+/* Utilities */
+.text-primary {
+    color: #4299e1 !important;
+}
+
+.bg-primary {
+    background-color: #4299e1 !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+} 

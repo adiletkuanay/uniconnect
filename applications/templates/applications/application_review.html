@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="mb-0">{% trans "Review Application" %}</h2>
+        </div>
+        <div class="card-body">
+            <!-- Application Information -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>{% trans "Applicant Information" %}</h5>
+                    <p><strong>{% trans "Name" %}:</strong> {{ application.applicant.get_full_name }}</p>
+                    <p><strong>{% trans "Email" %}:</strong> {{ application.applicant.email }}</p>
+                    <p><strong>{% trans "High School GPA" %}:</strong> {{ application.high_school_gpa }}</p>
+                    <p><strong>{% trans "UNT Score" %}:</strong> {{ application.unt_score }}</p>
+                    <p><strong>{% trans "English Proficiency" %}:</strong> 
+                        {{ application.get_english_proficiency_type_display }} - {{ application.english_proficiency_score }}
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h5>{% trans "Program Information" %}</h5>
+                    <p><strong>{% trans "Program" %}:</strong> {{ application.program.name }}</p>
+                    <p><strong>{% trans "University" %}:</strong> {{ application.program.university.name }}</p>
+                    <p><strong>{% trans "Degree Level" %}:</strong> {{ application.program.get_degree_level_display }}</p>
+                    <p><strong>{% trans "Field of Study" %}:</strong> {{ application.program.field_of_study }}</p>
+                    <p><strong>{% trans "Submission Date" %}:</strong> {{ application.submission_date|date:"F j, Y" }}</p>
+                </div>
+            </div>
+
+            <!-- Personal Statement -->
+            <div class="mb-4">
+                <h5>{% trans "Personal Statement" %}</h5>
+                <div class="card">
+                    <div class="card-body">
+                        {{ application.personal_statement|linebreaks }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents -->
+            <div class="mb-4">
+                <h5>{% trans "Required Documents" %}</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Document Type" %}</th>
+                                <th>{% trans "Status" %}</th>
+                                <th>{% trans "Upload Date" %}</th>
+                                <th>{% trans "Actions" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in application.documents.all %}
+                                <tr>
+                                    <td>{{ document.get_document_type_display }}</td>
+                                    <td>
+                                        <span class="badge {% if document.status == 'verified' %}bg-success{% elif document.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %}">
+                                            {{ document.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ document.upload_date|date:"F j, Y" }}</td>
+                                    <td>
+                                        <a href="{{ document.file.url }}" class="btn btn-sm btn-info" target="_blank">
+                                            <i class="fas fa-eye me-1"></i>{% trans "View" %}
+                                        </a>
+                                        <a href="{% url 'applications:document_verify' document.id %}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-check-circle me-1"></i>{% trans "Verify" %}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">{% trans "No documents uploaded." %}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Review Form -->
+            <div class="mb-4">
+                <h5>{% trans "Review Decision" %}</h5>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    
+                    <div class="mt-3">
+                        <button type="submit" name="status" value="approved" class="btn btn-success">
+                            <i class="fas fa-check me-1"></i>{% trans "Approve Application" %}
+                        </button>
+                        <button type="submit" name="status" value="rejected" class="btn btn-danger">
+                            <i class="fas fa-times me-1"></i>{% trans "Reject Application" %}
+                        </button>
+                        <button type="submit" name="status" value="pending" class="btn btn-warning">
+                            <i class="fas fa-clock me-1"></i>{% trans "Mark as Pending" %}
+                        </button>
+                        <a href="{% url 'applications:application_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>{% trans "Back to List" %}
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Previous Reviews -->
+            {% if application.reviews.exists %}
+            <div class="mb-4">
+                <h5>{% trans "Review History" %}</h5>
+                <div class="list-group">
+                    {% for review in application.reviews.all %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-1">
+                                {{ review.reviewer.get_full_name }}
+                                <span class="badge {% if review.status == 'approved' %}bg-success{% elif review.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %}">
+                                    {{ review.get_status_display }}
+                                </span>
+                            </h6>
+                            <small>{{ review.created_at|date:"F j, Y H:i" }}</small>
+                        </div>
+                        <p class="mb-1">{{ review.notes }}</p>
+                        {% if review.admin_notes %}
+                        <small class="text-muted">
+                            <strong>{% trans "Admin Notes" %}:</strong> {{ review.admin_notes }}
+                        </small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

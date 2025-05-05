@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-4 mb-4">Privacy Policy</h1>
+            <p class="lead mb-4">Last updated: {{ current_date|date:"F d, Y" }}</p>
+
+            <!-- Introduction -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Introduction</h2>
+                <p>At UniConnect, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site.</p>
+            </section>
+
+            <!-- Information Collection -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Information We Collect</h2>
+                <h3 class="h5 mb-3">Personal Information</h3>
+                <p>We collect personal information that you voluntarily provide to us when you:</p>
+                <ul>
+                    <li>Register for an account</li>
+                    <li>Submit an application</li>
+                    <li>Upload documents</li>
+                    <li>Contact our support team</li>
+                </ul>
+                <p>This information may include:</p>
+                <ul>
+                    <li>Name and contact information</li>
+                    <li>Academic history and qualifications</li>
+                    <li>Documentation and identification</li>
+                    <li>Payment information</li>
+                </ul>
+
+                <h3 class="h5 mb-3 mt-4">Automatically Collected Information</h3>
+                <p>When you access our platform, we automatically collect certain information about your device, including:</p>
+                <ul>
+                    <li>IP address</li>
+                    <li>Browser type</li>
+                    <li>Operating system</li>
+                    <li>Access times</li>
+                    <li>Pages viewed</li>
+                </ul>
+            </section>
+
+            <!-- Use of Information -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">How We Use Your Information</h2>
+                <p>We use the information we collect to:</p>
+                <ul>
+                    <li>Process and manage your applications</li>
+                    <li>Communicate with you about your applications</li>
+                    <li>Improve our platform and services</li>
+                    <li>Send you important updates and notifications</li>
+                    <li>Comply with legal obligations</li>
+                </ul>
+            </section>
+
+            <!-- Information Sharing -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Information Sharing</h2>
+                <p>We may share your information with:</p>
+                <ul>
+                    <li>Universities and educational institutions you apply to</li>
+                    <li>Service providers who assist in our operations</li>
+                    <li>Legal authorities when required by law</li>
+                </ul>
+                <p>We do not sell your personal information to third parties.</p>
+            </section>
+
+            <!-- Data Security -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Data Security</h2>
+                <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. These measures include:</p>
+                <ul>
+                    <li>Encryption of sensitive data</li>
+                    <li>Regular security assessments</li>
+                    <li>Access controls and authentication</li>
+                    <li>Secure data storage</li>
+                </ul>
+            </section>
+
+            <!-- Your Rights -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Your Rights</h2>
+                <p>You have the right to:</p>
+                <ul>
+                    <li>Access your personal information</li>
+                    <li>Correct inaccurate information</li>
+                    <li>Request deletion of your information</li>
+                    <li>Object to processing of your information</li>
+                    <li>Data portability</li>
+                </ul>
+                <p>To exercise these rights, please contact us using the information provided below.</p>
+            </section>
+
+            <!-- Cookies -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Cookies</h2>
+                <p>We use cookies and similar tracking technologies to track activity on our platform and hold certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.</p>
+            </section>
+
+            <!-- Children's Privacy -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Children's Privacy</h2>
+                <p>Our platform is not intended for use by children under the age of 13. We do not knowingly collect personal information from children under 13.</p>
+            </section>
+
+            <!-- Changes to Policy -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Changes to This Privacy Policy</h2>
+                <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.</p>
+            </section>
+
+            <!-- Contact Us -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Contact Us</h2>
+                <p>If you have any questions about this Privacy Policy, please contact us:</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope me-2"></i>privacy@uniconnect.com</li>
+                    <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                    <li><i class="fas fa-map-marker-alt me-2"></i>123 Privacy Street, Data City, DC 12345</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</div>
+
+<style>
+section {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 2rem;
+}
+
+section:last-child {
+    border-bottom: none;
+}
+
+h2 {
+    color: #333;
+}
+
+ul {
+    padding-left: 1.5rem;
+}
+
+.list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Application Status Updates</h2>
+                </div>
+                <div class="card-body">
+                    {% if updates %}
+                        <div class="timeline">
+                            {% for update in updates %}
+                                <div class="timeline-item">
+                                    <div class="timeline-marker {% if update.is_important %}bg-danger{% else %}bg-primary{% endif %}"></div>
+                                    <div class="timeline-content">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-1">{{ update.title }}</h5>
+                                            <small class="text-muted">{{ update.created_at|date:"F j, Y" }}</small>
+                                        </div>
+                                        <p class="mb-1">{{ update.description }}</p>
+                                        {% if update.related_document %}
+                                            <a href="{{ update.related_document.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                                View Related Document
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No status updates available for this application.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Application Progress</h5>
+                </div>
+                <div class="card-body">
+                    <div class="progress mb-3" style="height: 25px;">
+                        <div class="progress-bar {% if application.status == 'submitted' %}bg-primary{% elif application.status == 'approved' %}bg-success{% elif application.status == 'rejected' %}bg-danger{% else %}bg-secondary{% endif %}" 
+                             role="progressbar" 
+                             style="width: {% if application.status == 'draft' %}25%{% elif application.status == 'submitted' %}50%{% elif application.status == 'under_review' %}75%{% else %}100%{% endif %};" 
+                             aria-valuenow="{% if application.status == 'draft' %}25{% elif application.status == 'submitted' %}50{% elif application.status == 'under_review' %}75{% else %}100{% endif %}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ application.get_status_display }}
+                        </div>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas {% if application.status != 'draft' %}fa-check-circle text-success{% else %}fa-circle text-secondary{% endif %}"></i>
+                            Application Form Completed
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas {% if application.status == 'submitted' or application.status == 'under_review' or application.status == 'approved' %}fa-check-circle text-success{% else %}fa-circle text-secondary{% endif %}"></i>
+                            Documents Uploaded
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas {% if application.status == 'under_review' or application.status == 'approved' %}fa-check-circle text-success{% else %}fa-circle text-secondary{% endif %}"></i>
+                            Under Review
+                        </li>
+                        <li>
+                            <i class="fas {% if application.status == 'approved' %}fa-check-circle text-success{% else %}fa-circle text-secondary{% endif %}"></i>
+                            Final Decision
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Next Steps</h5>
+                </div>
+                <div class="card-body">
+                    {% if application.status == 'draft' %}
+                        <p>Complete your application by:</p>
+                        <ol>
+                            <li>Reviewing all entered information</li>
+                            <li>Uploading all required documents</li>
+                            <li>Submitting your application</li>
+                        </ol>
+                        <a href="{% url 'application_submit' application.id %}" class="btn btn-success w-100">Submit Application</a>
+                    {% elif application.status == 'submitted' %}
+                        <p>Your application has been submitted. The admissions team will review it and you'll be notified of any updates.</p>
+                    {% elif application.status == 'under_review' %}
+                        <p>Your application is currently being reviewed. This process typically takes 2-4 weeks.</p>
+                    {% elif application.status == 'approved' %}
+                        <p>Congratulations! Your application has been approved. You will receive further instructions via email.</p>
+                    {% elif application.status == 'rejected' %}
+                        <p>We regret to inform you that your application was not successful. You may contact the admissions office for feedback.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-left: 30px;
+        margin-bottom: 20px;
+    }
+    
+    .timeline-marker {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+    
+    .timeline-content {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+    }
+</style>
+{% endblock %} 

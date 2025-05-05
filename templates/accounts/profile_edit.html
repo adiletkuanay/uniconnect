@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Edit Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Profile Picture -->
+                        <div class="mb-4 text-center">
+                            <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle mb-3" width="150" id="profile-picture-preview">
+                            <div class="d-flex justify-content-center">
+                                <div class="btn btn-primary btn-sm">
+                                    <label for="id_profile_picture" class="mb-0">Change Picture</label>
+                                    <input type="file" name="profile_picture" id="id_profile_picture" class="d-none" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Personal Information -->
+                        <h5 class="mb-3">Personal Information</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="id_first_name" class="form-label">First Name</label>
+                                <input type="text" name="first_name" id="id_first_name" class="form-control" value="{{ user.first_name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_last_name" class="form-label">Last Name</label>
+                                <input type="text" name="last_name" id="id_last_name" class="form-control" value="{{ user.last_name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_email" class="form-label">Email</label>
+                                <input type="email" name="email" id="id_email" class="form-control" value="{{ user.email }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_phone" class="form-label">Phone</label>
+                                <input type="tel" name="phone" id="id_phone" class="form-control" value="{{ user.profile.phone }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_date_of_birth" class="form-label">Date of Birth</label>
+                                <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-control" value="{{ user.profile.date_of_birth|date:'Y-m-d' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_nationality" class="form-label">Nationality</label>
+                                <select name="nationality" id="id_nationality" class="form-select">
+                                    <option value="">Select Nationality</option>
+                                    {% for country in countries %}
+                                    <option value="{{ country.code }}" {% if user.profile.nationality == country.code %}selected{% endif %}>
+                                        {{ country.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="id_address" class="form-label">Address</label>
+                                <textarea name="address" id="id_address" class="form-control" rows="2">{{ user.profile.address }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Academic Information -->
+                        <h5 class="mb-3 mt-4">Academic Information</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="id_high_school" class="form-label">High School</label>
+                                <input type="text" name="high_school" id="id_high_school" class="form-control" value="{{ user.profile.high_school }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_gpa" class="form-label">GPA</label>
+                                <input type="number" name="gpa" id="id_gpa" class="form-control" step="0.01" min="0" max="4" value="{{ user.profile.gpa }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_english_proficiency" class="form-label">English Proficiency Test</label>
+                                <select name="english_proficiency" id="id_english_proficiency" class="form-select">
+                                    <option value="">Select Test</option>
+                                    <option value="IELTS" {% if user.profile.english_proficiency == 'IELTS' %}selected{% endif %}>IELTS</option>
+                                    <option value="TOEFL" {% if user.profile.english_proficiency == 'TOEFL' %}selected{% endif %}>TOEFL</option>
+                                    <option value="PTE" {% if user.profile.english_proficiency == 'PTE' %}selected{% endif %}>PTE</option>
+                                    <option value="Duolingo" {% if user.profile.english_proficiency == 'Duolingo' %}selected{% endif %}>Duolingo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_test_score" class="form-label">Test Score</label>
+                                <input type="number" name="test_score" id="id_test_score" class="form-control" step="0.1" value="{{ user.profile.test_score }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_intended_major" class="form-label">Intended Major</label>
+                                <input type="text" name="intended_major" id="id_intended_major" class="form-control" value="{{ user.profile.intended_major }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_preferred_start_date" class="form-label">Preferred Start Date</label>
+                                <input type="date" name="preferred_start_date" id="id_preferred_start_date" class="form-control" value="{{ user.profile.preferred_start_date|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <h5 class="mb-3 mt-4">Additional Information</h5>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="id_personal_statement" class="form-label">Personal Statement</label>
+                                <textarea name="personal_statement" id="id_personal_statement" class="form-control" rows="4">{{ user.profile.personal_statement }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label for="id_achievements" class="form-label">Achievements</label>
+                                <textarea name="achievements" id="id_achievements" class="form-control" rows="3">{{ user.profile.achievements }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label for="id_extracurricular" class="form-label">Extracurricular Activities</label>
+                                <textarea name="extracurricular" id="id_extracurricular" class="form-control" rows="3">{{ user.profile.extracurricular }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Profile picture preview
+    document.getElementById('id_profile_picture').addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-picture-preview').src = e.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    // Form validation
+    (function() {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}
+{% endblock %} 

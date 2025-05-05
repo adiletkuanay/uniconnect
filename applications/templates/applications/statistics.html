@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+
+{% block title %}Application Statistics - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4">Application Statistics</h1>
+            <p class="lead">Monitor and analyze application trends and performance.</p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Total Applications</h6>
+                    <h2 class="display-4">{{ total_applications|intcomma }}</h2>
+                    <p class="mb-0">
+                        <span class="{% if application_growth > 0 %}text-success{% else %}text-danger{% endif %}">
+                            <i class="fas fa-arrow-{% if application_growth > 0 %}up{% else %}down{% endif %}"></i>
+                            {{ application_growth|abs }}%
+                        </span>
+                        from last month
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Accepted Applications</h6>
+                    <h2 class="display-4">{{ accepted_applications|intcomma }}</h2>
+                    <p class="mb-0">{{ acceptance_rate }}% acceptance rate</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Pending Applications</h6>
+                    <h2 class="display-4">{{ pending_applications|intcomma }}</h2>
+                    <p class="mb-0">{{ pending_percentage }}% of total</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Average Processing Time</h6>
+                    <h2 class="display-4">{{ avg_processing_time }}</h2>
+                    <p class="mb-0">days per application</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-4">
+        <!-- Applications Over Time -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Applications Over Time</h5>
+                    <canvas id="applicationsChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Application Status Distribution -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Application Status Distribution</h5>
+                    <canvas id="statusChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Statistics -->
+    <div class="row">
+        <!-- Top Programs -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Top Programs by Applications</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Applications</th>
+                                    <th>Acceptance Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for program in top_programs %}
+                                <tr>
+                                    <td>{{ program.title }}</td>
+                                    <td>{{ program.application_count }}</td>
+                                    <td>{{ program.acceptance_rate }}%</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Countries -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Applications by Country</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Country</th>
+                                    <th>Applications</th>
+                                    <th>Growth</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for country in top_countries %}
+                                <tr>
+                                    <td>{{ country.name }}</td>
+                                    <td>{{ country.application_count }}</td>
+                                    <td>
+                                        <span class="{% if country.growth > 0 %}text-success{% else %}text-danger{% endif %}">
+                                            <i class="fas fa-arrow-{% if country.growth > 0 %}up{% else %}down{% endif %}"></i>
+                                            {{ country.growth|abs }}%
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Verification Stats -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Document Verification Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for status in doc_verification_stats %}
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <h3 class="mb-1">{{ status.count }}</h3>
+                                <p class="text-muted mb-0">{{ status.status }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processing Time Stats -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Average Processing Time by Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Average Time</th>
+                                    <th>Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in processing_time_stats %}
+                                <tr>
+                                    <td>{{ stat.status }}</td>
+                                    <td>{{ stat.avg_time }} days</td>
+                                    <td>
+                                        <span class="{% if stat.trend > 0 %}text-danger{% else %}text-success{% endif %}">
+                                            <i class="fas fa-arrow-{% if stat.trend > 0 %}up{% else %}down{% endif %}"></i>
+                                            {{ stat.trend|abs }}%
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+</style>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+$(document).ready(function() {
+    // Applications Over Time Chart
+    const applicationsCtx = document.getElementById('applicationsChart').getContext('2d');
+    new Chart(applicationsCtx, {
+        type: 'line',
+        data: {
+            labels: {{ months|safe }},
+            datasets: [{
+                label: 'Applications',
+                data: {{ application_counts|safe }},
+                borderColor: '#0d6efd',
+                backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Status Distribution Chart
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ status_labels|safe }},
+            datasets: [{
+                data: {{ status_counts|safe }},
+                backgroundColor: [
+                    '#28a745',
+                    '#ffc107',
+                    '#dc3545',
+                    '#17a2b8'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

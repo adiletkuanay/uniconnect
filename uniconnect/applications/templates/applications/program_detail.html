@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <!-- Program Overview -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">{{ program.title }}</h2>
+                        <span class="badge bg-primary">{{ program.get_degree_level_display }}</span>
+                    </div>
+                    <p class="text-muted mb-0">{{ program.university.name }}</p>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Program Details</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Field of Study:</strong> {{ program.field_of_study }}</li>
+                                <li><strong>Duration:</strong> {{ program.duration }} months</li>
+                                <li><strong>Language:</strong> {{ program.language }}</li>
+                                <li><strong>Start Date:</strong> {{ program.start_date|date:"F Y" }}</li>
+                                <li><strong>Application Deadline:</strong> {{ program.application_deadline|date:"F d, Y" }}</li>
+                                <li><strong>Tuition Fee:</strong> {{ program.tuition_fee }}</li>
+                                {% if program.scholarship_available %}
+                                <li><strong>Scholarships:</strong> Available</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Requirements</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Minimum GPA: {{ program.min_gpa }}</li>
+                                <li><i class="fas fa-check text-success"></i> English Requirement: {{ program.english_requirement }}</li>
+                                {% if program.other_requirements %}
+                                <li><i class="fas fa-check text-success"></i> {{ program.other_requirements }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="program-description mb-4">
+                        <h5>Program Description</h5>
+                        <p>{{ program.description }}</p>
+                    </div>
+
+                    <!-- Curriculum -->
+                    <div class="curriculum mb-4">
+                        <h5>Curriculum</h5>
+                        <div class="accordion" id="curriculumAccordion">
+                            {% for semester in program.curriculum.all %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ semester.id }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ semester.id }}">
+                                        Semester {{ semester.number }}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ semester.id }}" class="accordion-collapse collapse" data-bs-parent="#curriculumAccordion">
+                                    <div class="accordion-body">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Course Code</th>
+                                                    <th>Course Name</th>
+                                                    <th>Credits</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for course in semester.courses.all %}
+                                                <tr>
+                                                    <td>{{ course.code }}</td>
+                                                    <td>{{ course.name }}</td>
+                                                    <td>{{ course.credits }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Faculty -->
+                    <div class="faculty mb-4">
+                        <h5>Faculty</h5>
+                        <div class="row">
+                            {% for faculty in program.faculty.all %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ faculty.name }}</h6>
+                                        <p class="card-text text-muted">{{ faculty.title }}</p>
+                                        <p class="card-text">{{ faculty.bio|truncatewords:30 }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Program Outcomes -->
+                    <div class="outcomes mb-4">
+                        <h5>Program Outcomes</h5>
+                        <ul class="list-group">
+                            {% for outcome in program.outcomes.all %}
+                            <li class="list-group-item">
+                                <i class="fas fa-check-circle text-success"></i> {{ outcome.description }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Testimonials -->
+                    <div class="testimonials">
+                        <h5>Student Testimonials</h5>
+                        <div class="row">
+                            {% for testimonial in program.testimonials.all %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text">"{{ testimonial.content }}"</p>
+                                        <footer class="blockquote-footer">
+                                            {{ testimonial.student_name }}, Class of {{ testimonial.graduation_year }}
+                                        </footer>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'application_create' program.id %}" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Apply Now
+                        </a>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#compareModal">
+                            <i class="fas fa-balance-scale"></i> Compare Programs
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
+                            <i class="fas fa-envelope"></i> Contact Program Coordinator
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Similar Programs -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Similar Programs</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for similar in similar_programs %}
+                        <a href="{% url 'program_detail' similar.id %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ similar.title }}</h6>
+                                <small>{{ similar.university.name }}</small>
+                            </div>
+                            <p class="mb-1">{{ similar.field_of_study }}</p>
+                            <small>{{ similar.get_degree_level_display }}</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Dates -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Important Dates</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Application Opens
+                            <span class="badge bg-primary rounded-pill">{{ program.application_start_date|date:"M d, Y" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Application Deadline
+                            <span class="badge bg-danger rounded-pill">{{ program.application_deadline|date:"M d, Y" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Program Start
+                            <span class="badge bg-success rounded-pill">{{ program.start_date|date:"M d, Y" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Compare Programs Modal -->
+<div class="modal fade" id="compareModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Compare Programs</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="get" action="{% url 'program_compare' %}">
+                    <div class="mb-3">
+                        <label class="form-label">Select Program to Compare</label>
+                        <select class="form-select" name="program2" required>
+                            <option value="">Select a program</option>
+                            {% for other in other_programs %}
+                            <option value="{{ other.id }}">{{ other.title }} - {{ other.university.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="hidden" name="program1" value="{{ program.id }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Compare</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Contact Program Coordinator</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'contact_coordinator' program.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        <input type="text" class="form-control" name="subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,53 @@
+{% extends 'applications/emails/base_email.html' %}
+
+{% block content %}
+<div class="email-content">
+    <h2>Document Verification Required</h2>
+    <p>Dear {{ application.student.get_full_name }},</p>
+    
+    <p>We need additional verification for some documents in your application for <strong>{{ application.program.title }}</strong> at <strong>{{ application.program.university.name }}</strong>.</p>
+    
+    <div class="document-details">
+        <h3>Documents Requiring Verification</h3>
+        <ul>
+            {% for document in documents %}
+                <li>
+                    <strong>{{ document.get_document_type_display }}</strong>
+                    {% if document.verification_notes %}
+                        <p class="verification-notes">{{ document.verification_notes }}</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="verification-instructions">
+        <h3>Verification Instructions</h3>
+        <ol>
+            <li>Log in to your UniConnect account</li>
+            <li>Navigate to your application</li>
+            <li>Upload the required documents with proper verification</li>
+            <li>Submit the documents for review</li>
+        </ol>
+    </div>
+
+    <div class="cta">
+        <a href="{{ document_upload_url }}" class="button">Upload Verified Documents</a>
+    </div>
+
+    <div class="important-note">
+        <h4>Important Note</h4>
+        <p>Please ensure that all documents are:</p>
+        <ul>
+            <li>Clear and legible</li>
+            <li>Properly certified or notarized if required</li>
+            <li>In the correct format (PDF or JPG)</li>
+            <li>Uploaded before the deadline: {{ deadline|date:"F j, Y" }}</li>
+        </ul>
+    </div>
+
+    <p>If you have any questions about the verification process, please contact our admissions office.</p>
+    
+    <p>Best regards,<br>The Admissions Team</p>
+</div>
+{% endblock %} 

@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <!-- University Overview -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="mb-0">{{ university.name }}</h2>
+                    <p class="text-muted mb-0">{{ university.location }}</p>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            {% if university.logo %}
+                                <img src="{{ university.logo.url }}" 
+                                     alt="{{ university.name }} Logo" 
+                                     class="img-fluid rounded mb-3">
+                            {% else %}
+                                <div class="text-center p-4 bg-light rounded mb-3">
+                                    <i class="fas fa-university fa-4x text-muted"></i>
+                                    <p class="mt-2 text-muted">No logo available</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="university-info">
+                                <p><strong>Established:</strong> {{ university.established_date }}</p>
+                                <p><strong>Website:</strong> <a href="{{ university.website }}" target="_blank">{{ university.website }}</a></p>
+                                <p><strong>Contact:</strong> <a href="mailto:{{ university.contact_email }}">{{ university.contact_email }}</a></p>
+                                {% if university.ranking %}
+                                    <p><strong>Ranking:</strong> #{{ university.ranking }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="university-description mb-4">
+                        <h4>About the University</h4>
+                        <p>{{ university.description }}</p>
+                    </div>
+
+                    {% if university.accreditation %}
+                    <div class="accreditation mb-4">
+                        <h4>Accreditation</h4>
+                        <p>{{ university.accreditation }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if university.facilities %}
+                    <div class="facilities mb-4">
+                        <h4>Facilities</h4>
+                        <p>{{ university.facilities }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if university.student_life %}
+                    <div class="student-life mb-4">
+                        <h4>Student Life</h4>
+                        <p>{{ university.student_life }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Programs Offered -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0">Programs Offered</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Degree Level</th>
+                                    <th>Duration</th>
+                                    <th>Language</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for program in university.programs.all %}
+                                <tr>
+                                    <td>{{ program.title }}</td>
+                                    <td>{{ program.get_degree_level_display }}</td>
+                                    <td>{{ program.duration }} months</td>
+                                    <td>{{ program.language }}</td>
+                                    <td>
+                                        <a href="{% url 'applications:program_detail' program.id %}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-info-circle"></i> Details
+                                        </a>
+                                        <a href="{% url 'applications:application_create' program.id %}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-paper-plane"></i> Apply
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No programs available yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        {% if user.role == 'system_admin' %}
+                            <a href="{% url 'applications:program_create' %}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Program
+                            </a>
+                            <a href="{% url 'applications:university_create' %}" class="btn btn-secondary">
+                                <i class="fas fa-plus"></i> Add Another University
+                            </a>
+                        {% endif %}
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
+                            <i class="fas fa-envelope"></i> Contact University
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#requestInfoModal">
+                            <i class="fas fa-info-circle"></i> Request Information
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Modal -->
+            <div class="modal fade" id="contactModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Contact {{ university.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="{% url 'applications:contact_university' university.pk %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="subject" class="form-label">Subject</label>
+                                    <input type="text" class="form-control" id="subject" name="subject" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Message</label>
+                                    <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Request Info Modal -->
+            <div class="modal fade" id="requestInfoModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Request Information</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="{% url 'applications:request_info' university.pk %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="info_type" class="form-label">Information Type</label>
+                                    <select class="form-select" id="info_type" name="info_type" required>
+                                        <option value="">Select information type</option>
+                                        <option value="Admission Requirements">Admission Requirements</option>
+                                        <option value="Scholarships">Scholarships</option>
+                                        <option value="Housing">Housing</option>
+                                        <option value="Student Life">Student Life</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Additional Notes</label>
+                                    <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Request Information</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

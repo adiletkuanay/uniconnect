@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}UniConnect - Your Gateway to International Education{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Your Journey to International Education Starts Here</h1>
+                <p class="lead mb-4">Find and apply to top universities worldwide with our comprehensive platform. We make the application process simple and stress-free.</p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'program_list' %}" class="btn btn-light btn-lg">Explore Programs</a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">Get Started</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{% static 'images/hero-image.jpg' %}" alt="Students studying" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Programs -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Featured Programs</h2>
+        <div class="row g-4">
+            {% for program in featured_programs %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ program.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ program.university.name }}</h6>
+                        <p class="card-text">{{ program.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-primary">{{ program.degree_level }}</span>
+                            <a href="{% url 'program_detail' program.id %}" class="btn btn-outline-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'program_list' %}" class="btn btn-primary">View All Programs</a>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics -->
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="display-4 fw-bold text-primary">{{ total_programs }}</div>
+                <p class="text-muted">Programs</p>
+            </div>
+            <div class="col-md-3">
+                <div class="display-4 fw-bold text-primary">{{ total_universities }}</div>
+                <p class="text-muted">Universities</p>
+            </div>
+            <div class="col-md-3">
+                <div class="display-4 fw-bold text-primary">{{ total_students }}</div>
+                <p class="text-muted">Students</p>
+            </div>
+            <div class="col-md-3">
+                <div class="display-4 fw-bold text-primary">{{ success_rate }}%</div>
+                <p class="text-muted">Success Rate</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary text-white rounded-circle p-3 d-inline-block mb-3">
+                        <i class="fas fa-search fa-2x"></i>
+                    </div>
+                    <h4>Find Programs</h4>
+                    <p>Browse through our extensive database of international programs and universities.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary text-white rounded-circle p-3 d-inline-block mb-3">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                    </div>
+                    <h4>Apply Online</h4>
+                    <p>Complete your application with our user-friendly platform and track your progress.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-primary text-white rounded-circle p-3 d-inline-block mb-3">
+                        <i class="fas fa-graduation-cap fa-2x"></i>
+                    </div>
+                    <h4>Start Your Journey</h4>
+                    <p>Get accepted and begin your international education experience.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Success Stories</h2>
+        <div class="row">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ testimonial.student.profile_picture.url }}" alt="{{ testimonial.student.name }}" class="rounded-circle me-3" width="50">
+                            <div>
+                                <h5 class="mb-0">{{ testimonial.student.name }}</h5>
+                                <small class="text-muted">{{ testimonial.student.program }} at {{ testimonial.student.university }}</small>
+                            </div>
+                        </div>
+                        <p class="card-text">"{{ testimonial.content }}"</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Start Your Journey?</h2>
+        <p class="lead mb-4">Join thousands of students who have found their perfect international program through UniConnect.</p>
+        <a href="{% url 'register' %}" class="btn btn-light btn-lg">Create Your Account</a>
+    </div>
+</section>
+{% endblock %} 

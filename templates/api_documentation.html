@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}API Documentation - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">API Documentation</h1>
+        <div>
+            <a href="{% url 'api:swagger' %}" class="btn btn-primary" target="_blank">
+                <i class="fas fa-book"></i> Interactive API Documentation
+            </a>
+        </div>
+    </div>
+
+    <!-- API Documentation Tabs -->
+    <ul class="nav nav-tabs mb-4" id="apiTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">
+                <i class="fas fa-info-circle"></i> Overview
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="authentication-tab" data-toggle="tab" href="#authentication" role="tab" aria-controls="authentication" aria-selected="false">
+                <i class="fas fa-key"></i> Authentication
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="endpoints-tab" data-toggle="tab" href="#endpoints" role="tab" aria-controls="endpoints" aria-selected="false">
+                <i class="fas fa-code"></i> Endpoints
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="integration-tab" data-toggle="tab" href="#integration" role="tab" aria-controls="integration" aria-selected="false">
+                <i class="fas fa-plug"></i> Integration Guide
+            </a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="apiTabsContent">
+        <!-- Overview Tab -->
+        <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">API Overview</h6>
+                </div>
+                <div class="card-body">
+                    <h5>Introduction</h5>
+                    <p>The UniConnect API provides a comprehensive set of endpoints for integrating with our platform. This documentation will help you understand how to authenticate, make requests, and handle responses.</p>
+
+                    <h5>Base URL</h5>
+                    <div class="alert alert-info">
+                        <code>https://api.uniconnect.com/v1/</code>
+                    </div>
+
+                    <h5>Response Format</h5>
+                    <p>All API responses are in JSON format with the following structure:</p>
+                    <pre><code>{
+    "status": "success",
+    "data": {
+        // Response data
+    },
+    "meta": {
+        // Pagination and other metadata
+    }
+}</code></pre>
+
+                    <h5>Rate Limiting</h5>
+                    <p>API requests are limited to:</p>
+                    <ul>
+                        <li>100 requests per minute for authenticated users</li>
+                        <li>20 requests per minute for unauthenticated users</li>
+                    </ul>
+                    <p>Rate limit headers are included in all responses:</p>
+                    <ul>
+                        <li><code>X-RateLimit-Limit</code>: Maximum number of requests per minute</li>
+                        <li><code>X-RateLimit-Remaining</code>: Number of requests remaining in the current window</li>
+                        <li><code>X-RateLimit-Reset</code>: Time at which the current rate limit window resets</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Authentication Tab -->
+        <div class="tab-pane fade" id="authentication" role="tabpanel" aria-labelledby="authentication-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Authentication</h6>
+                </div>
+                <div class="card-body">
+                    <h5>API Keys</h5>
+                    <p>To authenticate your requests, you need to include your API key in the request header:</p>
+                    <div class="alert alert-info">
+                        <code>Authorization: Bearer your_api_key_here</code>
+                    </div>
+
+                    <h5>Obtaining an API Key</h5>
+                    <ol>
+                        <li>Log in to your UniConnect account</li>
+                        <li>Navigate to Settings > API Access</li>
+                        <li>Generate a new API key</li>
+                        <li>Store your API key securely</li>
+                    </ol>
+
+                    <h5>Example Authentication Request</h5>
+                    <pre><code>curl -X GET https://api.uniconnect.com/v1/programs \
+    -H "Authorization: Bearer your_api_key_here"</code></pre>
+
+                    <h5>Security Best Practices</h5>
+                    <ul>
+                        <li>Never share your API key or commit it to version control</li>
+                        <li>Use environment variables to store API keys</li>
+                        <li>Regularly rotate your API keys</li>
+                        <li>Use HTTPS for all API requests</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Endpoints Tab -->
+        <div class="tab-pane fade" id="endpoints" role="tabpanel" aria-labelledby="endpoints-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">API Endpoints</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Endpoint</th>
+                                    <th>Method</th>
+                                    <th>Description</th>
+                                    <th>Authentication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>/programs</code></td>
+                                    <td>GET</td>
+                                    <td>List all programs</td>
+                                    <td>Optional</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/programs/{id}</code></td>
+                                    <td>GET</td>
+                                    <td>Get program details</td>
+                                    <td>Optional</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/universities</code></td>
+                                    <td>GET</td>
+                                    <td>List all universities</td>
+                                    <td>Optional</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/applications</code></td>
+                                    <td>GET, POST</td>
+                                    <td>List and create applications</td>
+                                    <td>Required</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/documents</code></td>
+                                    <td>GET, POST</td>
+                                    <td>List and upload documents</td>
+                                    <td>Required</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5 class="mt-4">Example Requests</h5>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold">Get Program Details</h6>
+                        </div>
+                        <div class="card-body">
+                            <pre><code>curl -X GET https://api.uniconnect.com/v1/programs/123 \
+    -H "Authorization: Bearer your_api_key_here"</code></pre>
+                            <p>Response:</p>
+                            <pre><code>{
+    "status": "success",
+    "data": {
+        "id": 123,
+        "title": "Computer Science",
+        "university": {
+            "id": 456,
+            "name": "Example University"
+        },
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition_fee": 25000,
+        "application_deadline": "2024-06-30"
+    }
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold">Create Application</h6>
+                        </div>
+                        <div class="card-body">
+                            <pre><code>curl -X POST https://api.uniconnect.com/v1/applications \
+    -H "Authorization: Bearer your_api_key_here" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "program_id": 123,
+        "documents": [
+            {
+                "type": "transcript",
+                "url": "https://example.com/transcript.pdf"
+            }
+        ]
+    }'</code></pre>
+                            <p>Response:</p>
+                            <pre><code>{
+    "status": "success",
+    "data": {
+        "id": 789,
+        "status": "pending",
+        "created_at": "2024-01-15T10:30:00Z",
+        "program": {
+            "id": 123,
+            "title": "Computer Science"
+        }
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integration Guide Tab -->
+        <div class="tab-pane fade" id="integration" role="tabpanel" aria-labelledby="integration-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Integration Guide</h6>
+                </div>
+                <div class="card-body">
+                    <h5>Getting Started</h5>
+                    <ol>
+                        <li>Obtain your API key from the UniConnect dashboard</li>
+                        <li>Set up your development environment</li>
+                        <li>Test the API with sample requests</li>
+                        <li>Implement error handling</li>
+                        <li>Deploy your integration</li>
+                    </ol>
+
+                    <h5>SDKs and Libraries</h5>
+                    <p>Official SDKs are available for the following languages:</p>
+                    <ul>
+                        <li>Python: <code>pip install uniconnect-sdk</code></li>
+                        <li>JavaScript: <code>npm install uniconnect-sdk</code></li>
+                        <li>Java: Maven dependency available</li>
+                    </ul>
+
+                    <h5>Example Integration (Python)</h5>
+                    <pre><code>from uniconnect import UniConnect
+
+# Initialize the client
+client = UniConnect(api_key='your_api_key_here')
+
+# Get program details
+program = client.programs.get(123)
+print(f"Program: {program.title}")
+
+# Create an application
+application = client.applications.create(
+    program_id=123,
+    documents=[
+        {
+            "type": "transcript",
+            "url": "https://example.com/transcript.pdf"
+        }
+    ]
+)
+print(f"Application ID: {application.id}")</code></pre>
+
+                    <h5>Error Handling</h5>
+                    <p>Common error responses:</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Status Code</th>
+                                    <th>Error Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>400</td>
+                                    <td>invalid_request</td>
+                                    <td>Invalid request parameters</td>
+                                </tr>
+                                <tr>
+                                    <td>401</td>
+                                    <td>unauthorized</td>
+                                    <td>Invalid or missing API key</td>
+                                </tr>
+                                <tr>
+                                    <td>403</td>
+                                    <td>forbidden</td>
+                                    <td>Insufficient permissions</td>
+                                </tr>
+                                <tr>
+                                    <td>429</td>
+                                    <td>rate_limit_exceeded</td>
+                                    <td>Too many requests</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5>Best Practices</h5>
+                    <ul>
+                        <li>Implement proper error handling and retry logic</li>
+                        <li>Cache responses when appropriate</li>
+                        <li>Monitor API usage and rate limits</li>
+                        <li>Keep SDKs and libraries up to date</li>
+                        <li>Test integrations in a staging environment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Add syntax highlighting to code blocks
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        // Add copy button to code blocks
+        $('pre').each(function() {
+            $(this).prepend('<button class="btn btn-sm btn-copy" title="Copy to clipboard"><i class="fas fa-copy"></i></button>');
+        });
+
+        // Handle copy button clicks
+        $('.btn-copy').on('click', function() {
+            const code = $(this).siblings('code').text();
+            navigator.clipboard.writeText(code).then(() => {
+                $(this).html('<i class="fas fa-check"></i>');
+                setTimeout(() => {
+                    $(this).html('<i class="fas fa-copy"></i>');
+                }, 2000);
+            });
+        });
+    });
+</script>
+
+<style>
+    pre {
+        position: relative;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.25rem;
+    }
+
+    .btn-copy {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        opacity: 0.5;
+        transition: opacity 0.2s;
+    }
+
+    pre:hover .btn-copy {
+        opacity: 1;
+    }
+
+    code {
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .alert code {
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+    }
+</style>
+{% endblock %} 

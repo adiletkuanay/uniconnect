@@ -1,0 +1,39 @@
+{% extends 'applications/emails/base_email.html' %}
+
+{% block content %}
+<div class="email-content">
+    <h2>Application Submitted Successfully</h2>
+    <p>Dear {{ application.student.get_full_name }},</p>
+    
+    <p>We are pleased to confirm that your application for <strong>{{ application.program.title }}</strong> at <strong>{{ application.program.university.name }}</strong> has been successfully submitted.</p>
+    
+    <div class="application-details">
+        <h3>Application Details</h3>
+        <ul>
+            <li><strong>Application ID:</strong> {{ application.id }}</li>
+            <li><strong>Program:</strong> {{ application.program.title }}</li>
+            <li><strong>University:</strong> {{ application.program.university.name }}</li>
+            <li><strong>Degree Level:</strong> {{ application.program.get_degree_level_display }}</li>
+            <li><strong>Field of Study:</strong> {{ application.program.field_of_study }}</li>
+            <li><strong>Submission Date:</strong> {{ application.submitted_date|date:"F j, Y" }}</li>
+        </ul>
+    </div>
+
+    <div class="next-steps">
+        <h3>Next Steps</h3>
+        <ol>
+            <li>Our admissions team will review your application</li>
+            <li>You will be notified of any additional document requirements</li>
+            <li>You can track your application status through your dashboard</li>
+        </ol>
+    </div>
+
+    <div class="cta">
+        <a href="{{ application_url }}" class="button">View Your Application</a>
+    </div>
+
+    <p>If you have any questions, please don't hesitate to contact our support team.</p>
+    
+    <p>Best regards,<br>The Admissions Team</p>
+</div>
+{% endblock %} 

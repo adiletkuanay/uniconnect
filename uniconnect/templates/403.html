@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Access Forbidden - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-danger mb-4">403</h1>
+                <h2 class="mb-4">Access Forbidden</h2>
+                <p class="lead mb-5">Sorry, you don't have permission to access this page or resource.</p>
+                
+                <div class="card mb-5">
+                    <div class="card-body">
+                        <h5 class="card-title">What you can do:</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <a href="{% url 'home' %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-home me-2"></i>Return to Homepage
+                                </a>
+                            </li>
+                            <li class="mb-3">
+                                <a href="{% url 'programs:search' %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-search me-2"></i>Search Programs
+                                </a>
+                            </li>
+                            <li class="mb-3">
+                                <a href="{% url 'universities:search' %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-university me-2"></i>Browse Universities
+                                </a>
+                            </li>
+                            {% if not user.is_authenticated %}
+                            <li>
+                                <a href="{% url 'accounts:login' %}" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login to Your Account
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Need Help?</h5>
+                        <p class="card-text">If you believe this is an error, please contact our support team:</p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-envelope me-2"></i>support@uniconnect.com
+                            </li>
+                            <li>
+                                <i class="fas fa-phone me-2"></i>+1 (555) 123-4567
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-page {
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.display-1 {
+    font-size: 8rem;
+    font-weight: 700;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+}
+
+.list-unstyled li {
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %} 

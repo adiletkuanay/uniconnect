@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ university.name }} - Programs{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">{{ university.name }} - Programs</h1>
+            
+            <!-- Search and Filter Form -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" name="search" class="form-control" placeholder="Search programs..." value="{{ search_query }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="degree_level" class="form-select">
+                                <option value="">All Degree Levels</option>
+                                <option value="bachelor" {% if degree_level == 'bachelor' %}selected{% endif %}>Bachelor</option>
+                                <option value="master" {% if degree_level == 'master' %}selected{% endif %}>Master</option>
+                                <option value="phd" {% if degree_level == 'phd' %}selected{% endif %}>PhD</option>
+                                <option value="diploma" {% if degree_level == 'diploma' %}selected{% endif %}>Diploma</option>
+                                <option value="certificate" {% if degree_level == 'certificate' %}selected{% endif %}>Certificate</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="language" class="form-select">
+                                <option value="">All Languages</option>
+                                <option value="en" {% if language == 'en' %}selected{% endif %}>English</option>
+                                <option value="tr" {% if language == 'tr' %}selected{% endif %}>Turkish</option>
+                                <option value="ru" {% if language == 'ru' %}selected{% endif %}>Russian</option>
+                                <option value="fr" {% if language == 'fr' %}selected{% endif %}>French</option>
+                                <option value="de" {% if language == 'de' %}selected{% endif %}>German</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Programs List -->
+            <div class="row">
+                {% for program in page_obj %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ program.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                {{ program.get_degree_level_display }} in {{ program.field_of_study }}
+                            </h6>
+                            <p class="card-text">{{ program.description|truncatewords:30 }}</p>
+                            <ul class="list-unstyled">
+                                <li><strong>Duration:</strong> {{ program.duration }} months</li>
+                                <li><strong>Language:</strong> {{ program.get_language_display }}</li>
+                                <li><strong>Tuition Fee:</strong> ${{ program.tuition_fee }}</li>
+                                {% if program.scholarship_available %}
+                                <li><span class="badge bg-success">Scholarships Available</span></li>
+                                {% endif %}
+                            </ul>
+                            <a href="{% url 'applications:program_detail' program.pk %}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        No programs found matching your criteria.
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.paginator.num_pages > 1 %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if degree_level %}&degree_level={{ degree_level }}{% endif %}{% if language %}&language={{ language }}{% endif %}">Previous</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if degree_level %}&degree_level={{ degree_level }}{% endif %}{% if language %}&language={{ language }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if degree_level %}&degree_level={{ degree_level }}{% endif %}{% if language %}&language={{ language }}{% endif %}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

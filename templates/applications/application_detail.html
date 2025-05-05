@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="mb-0">{% trans "Application Details" %}</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>{% trans "Program Information" %}</h5>
+                    <p><strong>{% trans "Program" %}:</strong> {{ application.program.name }}</p>
+                    <p><strong>{% trans "University" %}:</strong> {{ application.program.university.name }}</p>
+                    <p><strong>{% trans "Degree Level" %}:</strong> {{ application.program.get_degree_level_display }}</p>
+                    <p><strong>{% trans "Field of Study" %}:</strong> {{ application.program.field_of_study }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>{% trans "Application Status" %}</h5>
+                    <p>
+                        <strong>{% trans "Status" %}:</strong>
+                        <span class="badge {% if application.status == 'submitted' %}bg-primary{% elif application.status == 'approved' %}bg-success{% elif application.status == 'rejected' %}bg-danger{% else %}bg-secondary{% endif %}">
+                            {{ application.get_status_display }}
+                        </span>
+                    </p>
+                    {% if application.submission_date %}
+                        <p><strong>{% trans "Submitted Date" %}:</strong> {{ application.submission_date|date:"F j, Y" }}</p>
+                    {% endif %}
+                    
+                    <!-- Status Management for University Admins -->
+                    {% if user.role == 'university_admin' and application.program.university == user.university and application.status != 'draft' %}
+                    <div class="mt-3">
+                        <h6>{% trans "Update Application Status" %}</h6>
+                        <form method="post" action="{% url 'applications:application_review' application.id %}" class="d-flex gap-2">
+                            {% csrf_token %}
+                            <select name="status" class="form-select">
+                                <option value="approved" {% if application.status == 'approved' %}selected{% endif %}>{% trans "Approved" %}</option>
+                                <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>{% trans "Rejected" %}</option>
+                                <option value="pending" {% if application.status == 'pending' %}selected{% endif %}>{% trans "Pending" %}</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>{% trans "Update Status" %}
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Document Status Summary -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h5>{% trans "Document Status Summary" %}</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card bg-success text-white">
+                                <div class="card-body text-center">
+                                    <h3>{{ document_status.verified }}</h3>
+                                    <p class="mb-0">{% trans "Verified Documents" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-warning text-dark">
+                                <div class="card-body text-center">
+                                    <h3>{{ document_status.pending }}</h3>
+                                    <p class="mb-0">{% trans "Pending Documents" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body text-center">
+                                    <h3>{{ document_status.rejected }}</h3>
+                                    <p class="mb-0">{% trans "Rejected Documents" %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Missing Documents Warning -->
+            {% if missing_documents %}
+            <div class="alert alert-warning mb-4">
+                <h5 class="alert-heading">{% trans "Missing Documents" %}</h5>
+                <p>{% trans "The following documents are required but not yet uploaded:" %}</p>
+                <ul class="mb-0">
+                    {% for doc in missing_documents %}
+                        <li>{{ doc|title }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="mb-4">
+                <h5>{% trans "Application Notes" %}</h5>
+                <div class="card">
+                    <div class="card-body">
+                        {% if application.notes %}
+                            {{ application.notes|linebreaks }}
+                        {% else %}
+                            <p class="text-muted">{% trans "No notes provided." %}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h5>{% trans "Required Documents" %}</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Document Type" %}</th>
+                                <th>{% trans "Status" %}</th>
+                                <th>{% trans "Upload Date" %}</th>
+                                <th>{% trans "Actions" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in application.documents.all %}
+                                <tr>
+                                    <td>{{ document.get_document_type_display }}</td>
+                                    <td>
+                                        <span class="badge {% if document.status == 'verified' %}bg-success{% elif document.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %}">
+                                            {{ document.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ document.upload_date|date:"F j, Y" }}</td>
+                                    <td>
+                                        <a href="{{ document.file.url }}" class="btn btn-sm btn-info" target="_blank">
+                                            <i class="fas fa-eye me-1"></i>{% trans "View" %}
+                                        </a>
+                                        {% if can_edit %}
+                                            <a href="{% url 'applications:document_update' document.id %}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-edit me-1"></i>{% trans "Update" %}
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">{% trans "No documents uploaded yet." %}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if can_edit %}
+                <div class="mt-3">
+                    <a href="{% url 'applications:document_upload' application.id %}" class="btn btn-success">
+                        <i class="fas fa-upload me-1"></i>{% trans "Upload New Document" %}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'applications:application_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>{% trans "Back to List" %}
+                </a>
+                {% if can_edit %}
+                    <div>
+                        <a href="{% url 'applications:application_update' application.id %}" class="btn btn-primary">
+                            <i class="fas fa-edit me-1"></i>{% trans "Edit Application" %}
+                        </a>
+                        {% if can_submit %}
+                        <a href="{% url 'applications:application_submit' application.id %}" class="btn btn-success">
+                            <i class="fas fa-paper-plane me-1"></i>{% trans "Submit Application" %}
+                        </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

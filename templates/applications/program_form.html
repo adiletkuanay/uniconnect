@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        {% trans "Edit Program" %}
+    {% else %}
+        {% trans "Create New Program" %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if form.errors %}
+            <div class="alert alert-danger mb-4">
+                <h4 class="alert-heading">{% trans "Form Errors" %}:</h4>
+                <ul class="mb-0">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        {% if form.instance.pk %}
+                            {% trans "Edit Program" %}: {{ form.instance.title }}
+                        {% else %}
+                            {% trans "Create New Program" %}
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h4 class="mb-3">{% trans "Basic Information" %}</h4>
+                                {{ form.title|as_crispy_field }}
+                                {{ form.degree_level|as_crispy_field }}
+                                {{ form.field_of_study|as_crispy_field }}
+                                {{ form.duration|as_crispy_field }}
+                                {{ form.language|as_crispy_field }}
+                                {{ form.min_gpa|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="mb-3">{% trans "Dates & Fees" %}</h4>
+                                {{ form.start_date|as_crispy_field }}
+                                {{ form.application_start_date|as_crispy_field }}
+                                {{ form.application_deadline|as_crispy_field }}
+                                {{ form.tuition_fee|as_crispy_field }}
+                                {{ form.scholarship_available|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="mb-3">{% trans "Requirements & Description" %}</h4>
+                                {{ form.description|as_crispy_field }}
+                                {{ form.english_requirement|as_crispy_field }}
+                                {{ form.other_requirements|as_crispy_field }}
+                                {% if user.role == 'system_admin' %}
+                                    {{ form.university|as_crispy_field }}
+                                {% else %}
+                                    <div style="display: none;">
+                                        {{ form.university }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'dashboard:dashboard' %}" class="btn btn-secondary me-md-2">
+                                {% trans "Cancel" %}
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}
+                                    {% trans "Update Program" %}
+                                {% else %}
+                                    {% trans "Create Program" %}
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% if debug_info %}
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    Debug Information
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">User Role:</dt>
+                        <dd class="col-sm-9">{{ debug_info.user_role }}</dd>
+                        
+                        <dt class="col-sm-3">Is POST:</dt>
+                        <dd class="col-sm-9">{{ debug_info.is_post }}</dd>
+                        
+                        {% if debug_info.form_data %}
+                        <dt class="col-sm-3">Form Data:</dt>
+                        <dd class="col-sm-9">
+                            <pre class="mb-0">{{ debug_info.form_data|pprint }}</pre>
+                        </dd>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

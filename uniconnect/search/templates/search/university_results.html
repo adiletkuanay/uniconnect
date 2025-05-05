@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Universities - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Filters</h5>
+                </div>
+                <div class="card-body">
+                    <form id="searchForm" method="GET">
+                        <div class="mb-3">
+                            <label for="country" class="form-label">Country</label>
+                            <select class="form-select" id="country" name="country">
+                                <option value="">All Countries</option>
+                                {% for country in countries %}
+                                <option value="{{ country.id }}" {% if country.id == country %}selected{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="university_type" class="form-label">University Type</label>
+                            <select class="form-select" id="university_type" name="university_type">
+                                <option value="">All Types</option>
+                                <option value="public" {% if university_type == 'public' %}selected{% endif %}>Public</option>
+                                <option value="private" {% if university_type == 'private' %}selected{% endif %}>Private</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="min_rank" class="form-label">Minimum World Rank</label>
+                            <input type="number" class="form-control" id="min_rank" name="min_rank" min="1" value="{{ min_rank }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="max_rank" class="form-label">Maximum World Rank</label>
+                            <input type="number" class="form-control" id="max_rank" name="max_rank" min="1" value="{{ max_rank }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="min_acceptance_rate" class="form-label">Minimum Acceptance Rate (%)</label>
+                            <input type="number" class="form-control" id="min_acceptance_rate" name="min_acceptance_rate" min="0" max="100" value="{{ min_acceptance_rate }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="max_acceptance_rate" class="form-label">Maximum Acceptance Rate (%)</label>
+                            <input type="number" class="form-control" id="max_acceptance_rate" name="max_acceptance_rate" min="0" max="100" value="{{ max_acceptance_rate }}">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Search Results -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Search Results</h5>
+                </div>
+                <div class="card-body">
+                    <div class="search-results">
+                        {% if universities %}
+                            {% for university in universities %}
+                            <div class="university-card mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                {% if university.logo %}
+                                                <img src="{{ university.logo.url }}" alt="{{ university.name }} logo" class="img-fluid">
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-9">
+                                                <h5 class="card-title">{{ university.name }}</h5>
+                                                <h6 class="card-subtitle mb-2 text-muted">{{ university.country.name }}</h6>
+                                                <div class="row mt-3">
+                                                    <div class="col-md-6">
+                                                        <p><strong>Type:</strong> {{ university.get_university_type_display }}</p>
+                                                        <p><strong>World Rank:</strong> #{{ university.world_rank }}</p>
+                                                        <p><strong>Acceptance Rate:</strong> {{ university.acceptance_rate }}%</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p><strong>Total Students:</strong> {{ university.total_students|intcomma }}</p>
+                                                        <p><strong>International Students:</strong> {{ university.international_students }}%</p>
+                                                        <p><strong>Programs Offered:</strong> {{ university.programs.count }}</p>
+                                                    </div>
+                                                </div>
+                                                <a href="{{ university.get_absolute_url }}" class="btn btn-primary mt-3">View Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                            <!-- Pagination -->
+                            <nav aria-label="Search results pagination">
+                                <ul class="pagination justify-content-center">
+                                    {% if universities.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ universities.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Previous</a>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% for num in universities.paginator.page_range %}
+                                    <li class="page-item {% if universities.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                                    </li>
+                                    {% endfor %}
+                                    
+                                    {% if universities.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ universities.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Next</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% else %}
+                            <div class="alert alert-info">
+                                No universities found matching your criteria. Try adjusting your filters.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Handle form submission
+    $('#searchForm').on('submit', function(e) {
+        e.preventDefault();
+        const formData = $(this).serialize();
+        const url = window.location.pathname + '?' + formData;
+        window.location.href = url;
+    });
+    
+    // Handle filter changes
+    $('select, input').on('change', function() {
+        $('#searchForm').submit();
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

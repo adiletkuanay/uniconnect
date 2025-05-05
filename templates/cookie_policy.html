@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Cookie Policy - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="display-4 mb-4">Cookie Policy</h1>
+            <p class="lead mb-4">Last updated: {{ current_date|date:"F d, Y" }}</p>
+
+            <!-- Introduction -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">1. Introduction</h2>
+                <p>This Cookie Policy explains how UniConnect uses cookies and similar technologies to recognize you when you visit our platform. It explains what these technologies are and why we use them, as well as your rights to control our use of them.</p>
+            </section>
+
+            <!-- What are Cookies -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">2. What are Cookies?</h2>
+                <p>Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners to make their websites work, or to work more efficiently, as well as to provide reporting information.</p>
+            </section>
+
+            <!-- Why We Use Cookies -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">3. Why We Use Cookies</h2>
+                <p>We use cookies for several reasons:</p>
+                <ul>
+                    <li>To provide essential functionality</li>
+                    <li>To improve your experience</li>
+                    <li>To understand how our platform is used</li>
+                    <li>To personalize content and ads</li>
+                    <li>To provide social media features</li>
+                </ul>
+            </section>
+
+            <!-- Types of Cookies -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">4. Types of Cookies We Use</h2>
+                
+                <h3 class="h5 mb-3">Essential Cookies</h3>
+                <p>These cookies are strictly necessary for the platform to function and cannot be switched off. They are usually only set in response to actions made by you, such as setting your privacy preferences, logging in, or filling in forms.</p>
+
+                <h3 class="h5 mb-3">Performance Cookies</h3>
+                <p>These cookies allow us to count visits and traffic sources so we can measure and improve the performance of our platform. They help us know which pages are the most and least popular and see how visitors move around the platform.</p>
+
+                <h3 class="h5 mb-3">Functionality Cookies</h3>
+                <p>These cookies enable the platform to provide enhanced functionality and personalization. They may be set by us or by third-party providers whose services we have added to our pages.</p>
+
+                <h3 class="h5 mb-3">Targeting Cookies</h3>
+                <p>These cookies may be set through our platform by our advertising partners. They may be used by those companies to build a profile of your interests and show you relevant advertisements on other sites.</p>
+            </section>
+
+            <!-- Cookie Duration -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">5. How Long Cookies Stay on Your Device</h2>
+                <p>The length of time a cookie will stay on your device depends on whether it is a "persistent" or "session" cookie:</p>
+                <ul>
+                    <li>Session cookies will only stay on your device until you stop browsing</li>
+                    <li>Persistent cookies stay on your device until they expire or are deleted</li>
+                </ul>
+            </section>
+
+            <!-- Managing Cookies -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">6. Managing Cookies</h2>
+                <p>You can control and/or delete cookies as you wish. You can delete all cookies that are already on your computer and you can set most browsers to prevent them from being placed. If you do this, however, you may have to manually adjust some preferences every time you visit a site and some services and functionalities may not work.</p>
+                
+                <h3 class="h5 mb-3">Browser Settings</h3>
+                <p>Most web browsers allow some control of most cookies through the browser settings. To find out more about cookies, including how to see what cookies have been set and how to manage and delete them, visit <a href="https://www.allaboutcookies.org" target="_blank">www.allaboutcookies.org</a>.</p>
+            </section>
+
+            <!-- Third-Party Cookies -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">7. Third-Party Cookies</h2>
+                <p>In some special cases, we also use cookies provided by trusted third parties. The following section details which third party cookies you might encounter through this platform:</p>
+                <ul>
+                    <li>Google Analytics - Used to understand how you use our platform</li>
+                    <li>Facebook Pixel - Used to measure the effectiveness of our advertising</li>
+                    <li>Stripe - Used for payment processing</li>
+                </ul>
+            </section>
+
+            <!-- Updates to Policy -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">8. Updates to This Policy</h2>
+                <p>We may update this Cookie Policy from time to time to reflect changes to the cookies we use or for other operational, legal, or regulatory reasons. Please therefore revisit this Cookie Policy regularly to stay informed about our use of cookies and related technologies.</p>
+            </section>
+
+            <!-- Contact Information -->
+            <section class="mb-5">
+                <h2 class="h4 mb-3">9. Contact Us</h2>
+                <p>If you have any questions about our use of cookies or other technologies, please contact us:</p>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope me-2"></i>privacy@uniconnect.com</li>
+                    <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                    <li><i class="fas fa-map-marker-alt me-2"></i>123 Privacy Street, Data City, DC 12345</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</div>
+
+<style>
+section {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 2rem;
+}
+
+section:last-child {
+    border-bottom: none;
+}
+
+h2 {
+    color: #333;
+}
+
+h3 {
+    color: #555;
+}
+
+ul {
+    padding-left: 1.5rem;
+}
+
+.list-unstyled li {
+    margin-bottom: 0.5rem;
+}
+
+a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %} 

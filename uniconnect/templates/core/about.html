@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}About UniConnect Kazakhstan{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="text-center mb-5">About UniConnect Kazakhstan</h1>
+            
+            <div class="card shadow-sm mb-5">
+                <div class="card-body">
+                    <h2 class="h4 mb-4">Our Mission</h2>
+                    <p>UniConnect Kazakhstan is dedicated to simplifying the university application process for students across Kazakhstan. We aim to bridge the gap between prospective students and higher education institutions by providing a centralized, efficient, and user-friendly platform.</p>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <h2 class="h4 mb-4">What We Offer</h2>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h3 class="h5 mb-3">For Students</h3>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">✓ Easy university program search</li>
+                                    <li class="mb-2">✓ Streamlined application process</li>
+                                    <li class="mb-2">✓ Document management</li>
+                                    <li class="mb-2">✓ Real-time application tracking</li>
+                                    <li class="mb-2">✓ Scholarship information</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h3 class="h5 mb-3">For Universities</h3>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">✓ Efficient application management</li>
+                                    <li class="mb-2">✓ Increased visibility</li>
+                                    <li class="mb-2">✓ Streamlined communication</li>
+                                    <li class="mb-2">✓ Analytics and reporting</li>
+                                    <li class="mb-2">✓ Document verification</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-5">
+                <div class="card-body">
+                    <h2 class="h4 mb-4">Our Vision</h2>
+                    <p>We envision a future where every student in Kazakhstan has equal access to higher education opportunities. Our platform aims to:</p>
+                    <ul>
+                        <li>Reduce barriers to university applications</li>
+                        <li>Improve transparency in the admission process</li>
+                        <li>Foster better communication between institutions and applicants</li>
+                        <li>Provide comprehensive information about educational opportunities</li>
+                        <li>Support students in making informed decisions about their future</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <h2 class="h4 mb-4">Ready to Get Started?</h2>
+                <p class="mb-4">Join thousands of students who have already simplified their university application process with UniConnect Kazakhstan.</p>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Create Account</a>
+                {% else %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,495 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}University Integration Guide - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">University Integration Guide</h1>
+        <div>
+            <a href="{% url 'api:swagger' %}" class="btn btn-primary" target="_blank">
+                <i class="fas fa-book"></i> Interactive API Documentation
+            </a>
+        </div>
+    </div>
+
+    <!-- Integration Guide Tabs -->
+    <ul class="nav nav-tabs mb-4" id="integrationTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="setup-tab" data-toggle="tab" href="#setup" role="tab" aria-controls="setup" aria-selected="true">
+                <i class="fas fa-cog"></i> Setup Guide
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="endpoints-tab" data-toggle="tab" href="#endpoints" role="tab" aria-controls="endpoints" aria-selected="false">
+                <i class="fas fa-code"></i> University Endpoints
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="webhooks-tab" data-toggle="tab" href="#webhooks" role="tab" aria-controls="webhooks" aria-selected="false">
+                <i class="fas fa-exchange-alt"></i> Webhooks
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="best-practices-tab" data-toggle="tab" href="#best-practices" role="tab" aria-controls="best-practices" aria-selected="false">
+                <i class="fas fa-star"></i> Best Practices
+            </a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="integrationTabsContent">
+        <!-- Setup Guide Tab -->
+        <div class="tab-pane fade show active" id="setup" role="tabpanel" aria-labelledby="setup-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Setup Guide</h6>
+                </div>
+                <div class="card-body">
+                    <h5>Getting Started</h5>
+                    <ol>
+                        <li>Create a University Account
+                            <ul>
+                                <li>Register at <a href="{% url 'university:register' %}">uniconnect.com/universities/register</a></li>
+                                <li>Complete the university profile</li>
+                                <li>Verify your university's domain</li>
+                            </ul>
+                        </li>
+                        <li>Generate API Credentials
+                            <ul>
+                                <li>Navigate to Settings > API Access</li>
+                                <li>Generate API key and secret</li>
+                                <li>Download the university SDK</li>
+                            </ul>
+                        </li>
+                        <li>Configure Webhooks
+                            <ul>
+                                <li>Set up webhook endpoints</li>
+                                <li>Configure event subscriptions</li>
+                                <li>Test webhook delivery</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <h5>Required Information</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Information</th>
+                                    <th>Description</th>
+                                    <th>Required</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>University Name</td>
+                                    <td>Official name of the university</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td>Domain</td>
+                                    <td>University's official domain (e.g., university.edu)</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td>Contact Information</td>
+                                    <td>Primary contact for technical support</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td>Logo</td>
+                                    <td>University logo in PNG format</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td>Program Catalog</td>
+                                    <td>Initial program data in CSV format</td>
+                                    <td>No</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5>Initial Setup (Python Example)</h5>
+                    <pre><code>from uniconnect import UniversityClient
+
+# Initialize the client
+client = UniversityClient(
+    api_key='your_api_key_here',
+    api_secret='your_api_secret_here'
+)
+
+# Create university profile
+university = client.universities.create({
+    'name': 'Example University',
+    'domain': 'example.edu',
+    'contact_email': 'tech@example.edu',
+    'logo_url': 'https://example.edu/logo.png'
+})
+
+# Upload program catalog
+with open('programs.csv', 'rb') as f:
+    client.programs.import_catalog(f)
+
+# Configure webhooks
+client.webhooks.create({
+    'url': 'https://api.example.edu/webhooks/uniconnect',
+    'events': ['application.created', 'application.updated']
+})</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- University Endpoints Tab -->
+        <div class="tab-pane fade" id="endpoints" role="tabpanel" aria-labelledby="endpoints-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">University Endpoints</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Endpoint</th>
+                                    <th>Method</th>
+                                    <th>Description</th>
+                                    <th>Authentication</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>/universities/{id}</code></td>
+                                    <td>GET, PUT</td>
+                                    <td>Retrieve and update university profile</td>
+                                    <td>Required</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/universities/{id}/programs</code></td>
+                                    <td>GET, POST</td>
+                                    <td>List and create programs</td>
+                                    <td>Required</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/universities/{id}/applications</code></td>
+                                    <td>GET</td>
+                                    <td>List applications for university</td>
+                                    <td>Required</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/universities/{id}/documents</code></td>
+                                    <td>GET, POST</td>
+                                    <td>List and upload documents</td>
+                                    <td>Required</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/universities/{id}/webhooks</code></td>
+                                    <td>GET, POST</td>
+                                    <td>Manage webhook configurations</td>
+                                    <td>Required</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5 class="mt-4">Example Requests</h5>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold">Create Program</h6>
+                        </div>
+                        <div class="card-body">
+                            <pre><code>curl -X POST https://api.uniconnect.com/v1/universities/123/programs \
+    -H "Authorization: Bearer your_api_key_here" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "title": "Computer Science",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition_fee": 25000,
+        "application_deadline": "2024-06-30",
+        "requirements": {
+            "gpa": 3.0,
+            "language_tests": ["TOEFL", "IELTS"],
+            "documents": ["transcript", "personal_statement"]
+        }
+    }'</code></pre>
+                            <p>Response:</p>
+                            <pre><code>{
+    "status": "success",
+    "data": {
+        "id": 456,
+        "title": "Computer Science",
+        "university_id": 123,
+        "created_at": "2024-01-15T10:30:00Z"
+    }
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold">Update Application Status</h6>
+                        </div>
+                        <div class="card-body">
+                            <pre><code>curl -X PUT https://api.uniconnect.com/v1/universities/123/applications/789 \
+    -H "Authorization: Bearer your_api_key_here" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "status": "accepted",
+        "decision_date": "2024-03-15",
+        "notes": "Congratulations! You have been accepted."
+    }'</code></pre>
+                            <p>Response:</p>
+                            <pre><code>{
+    "status": "success",
+    "data": {
+        "id": 789,
+        "status": "accepted",
+        "updated_at": "2024-01-15T11:30:00Z"
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Webhooks Tab -->
+        <div class="tab-pane fade" id="webhooks" role="tabpanel" aria-labelledby="webhooks-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Webhooks</h6>
+                </div>
+                <div class="card-body">
+                    <h5>Available Events</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Description</th>
+                                    <th>Payload Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>application.created</code></td>
+                                    <td>New application submitted</td>
+                                    <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#payloadModal" data-event="application.created">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td><code>application.updated</code></td>
+                                    <td>Application status changed</td>
+                                    <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#payloadModal" data-event="application.updated">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td><code>document.uploaded</code></td>
+                                    <td>New document uploaded</td>
+                                    <td><button class="btn btn-sm btn-info" data-toggle="modal" data-target="#payloadModal" data-event="document.uploaded">View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5>Webhook Security</h5>
+                    <p>Each webhook request includes a signature header for verification:</p>
+                    <div class="alert alert-info">
+                        <code>X-UniConnect-Signature: t=timestamp,v1=signature</code>
+                    </div>
+
+                    <h5>Verification Example (Python)</h5>
+                    <pre><code>from uniconnect.webhooks import verify_signature
+
+def handle_webhook(request):
+    signature = request.headers.get('X-UniConnect-Signature')
+    payload = request.body
+    
+    try:
+        verify_signature(signature, payload, 'your_webhook_secret')
+        # Process webhook
+        return {'status': 'success'}, 200
+    except Exception as e:
+        return {'error': str(e)}, 400</code></pre>
+
+                    <h5>Retry Policy</h5>
+                    <ul>
+                        <li>Initial attempt</li>
+                        <li>Retry after 1 minute</li>
+                        <li>Retry after 5 minutes</li>
+                        <li>Retry after 15 minutes</li>
+                        <li>Retry after 1 hour</li>
+                        <li>Mark as failed after 24 hours</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Best Practices Tab -->
+        <div class="tab-pane fade" id="best-practices" role="tabpanel" aria-labelledby="best-practices-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Best Practices</h6>
+                </div>
+                <div class="card-body">
+                    <h5>API Integration</h5>
+                    <ul>
+                        <li>Use the official SDKs when possible</li>
+                        <li>Implement proper error handling and retry logic</li>
+                        <li>Cache responses when appropriate</li>
+                        <li>Monitor API usage and rate limits</li>
+                        <li>Keep SDKs and libraries up to date</li>
+                    </ul>
+
+                    <h5>Webhook Implementation</h5>
+                    <ul>
+                        <li>Always verify webhook signatures</li>
+                        <li>Process webhooks asynchronously</li>
+                        <li>Implement proper error handling</li>
+                        <li>Log all webhook events</li>
+                        <li>Test webhooks in a staging environment</li>
+                    </ul>
+
+                    <h5>Security</h5>
+                    <ul>
+                        <li>Store API credentials securely</li>
+                        <li>Use environment variables for sensitive data</li>
+                        <li>Regularly rotate API keys</li>
+                        <li>Implement proper access controls</li>
+                        <li>Monitor for suspicious activity</li>
+                    </ul>
+
+                    <h5>Performance</h5>
+                    <ul>
+                        <li>Use pagination for large datasets</li>
+                        <li>Implement caching strategies</li>
+                        <li>Batch operations when possible</li>
+                        <li>Monitor response times</li>
+                        <li>Optimize database queries</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payload Modal -->
+<div class="modal fade" id="payloadModal" tabindex="-1" role="dialog" aria-labelledby="payloadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="payloadModalLabel">Webhook Payload</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <pre><code id="payloadContent"></code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Add syntax highlighting to code blocks
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+
+        // Add copy button to code blocks
+        $('pre').each(function() {
+            $(this).prepend('<button class="btn btn-sm btn-copy" title="Copy to clipboard"><i class="fas fa-copy"></i></button>');
+        });
+
+        // Handle copy button clicks
+        $('.btn-copy').on('click', function() {
+            const code = $(this).siblings('code').text();
+            navigator.clipboard.writeText(code).then(() => {
+                $(this).html('<i class="fas fa-check"></i>');
+                setTimeout(() => {
+                    $(this).html('<i class="fas fa-copy"></i>');
+                }, 2000);
+            });
+        });
+
+        // Handle payload modal
+        const payloads = {
+            'application.created': {
+                "event": "application.created",
+                "data": {
+                    "id": 789,
+                    "program_id": 123,
+                    "university_id": 456,
+                    "status": "pending",
+                    "created_at": "2024-01-15T10:30:00Z"
+                }
+            },
+            'application.updated': {
+                "event": "application.updated",
+                "data": {
+                    "id": 789,
+                    "status": "accepted",
+                    "updated_at": "2024-01-15T11:30:00Z"
+                }
+            },
+            'document.uploaded': {
+                "event": "document.uploaded",
+                "data": {
+                    "id": 101,
+                    "application_id": 789,
+                    "type": "transcript",
+                    "url": "https://example.com/documents/transcript.pdf",
+                    "uploaded_at": "2024-01-15T12:30:00Z"
+                }
+            }
+        };
+
+        $('#payloadModal').on('show.bs.modal', function(event) {
+            const button = $(event.relatedTarget);
+            const eventType = button.data('event');
+            const payload = JSON.stringify(payloads[eventType], null, 2);
+            $('#payloadContent').text(payload);
+            hljs.highlightBlock(document.getElementById('payloadContent'));
+        });
+    });
+</script>
+
+<style>
+    pre {
+        position: relative;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.25rem;
+    }
+
+    .btn-copy {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        opacity: 0.5;
+        transition: opacity 0.2s;
+    }
+
+    pre:hover .btn-copy {
+        opacity: 1;
+    }
+
+    code {
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .alert code {
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+    }
+
+    .modal-body pre {
+        margin: 0;
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}System Settings - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">System Settings</h1>
+        <div>
+            <button type="button" class="btn btn-primary" id="saveSettings">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Tabs -->
+    <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">
+                <i class="fas fa-cog"></i> General Settings
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="security-tab" data-toggle="tab" href="#security" role="tab" aria-controls="security" aria-selected="false">
+                <i class="fas fa-shield-alt"></i> Security
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="integrations-tab" data-toggle="tab" href="#integrations" role="tab" aria-controls="integrations" aria-selected="false">
+                <i class="fas fa-plug"></i> Integrations
+            </a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="settingsTabsContent">
+        <!-- General Settings Tab -->
+        <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">General Settings</h6>
+                </div>
+                <div class="card-body">
+                    <form id="generalSettingsForm">
+                        <div class="form-group">
+                            <label for="siteName">Site Name</label>
+                            <input type="text" class="form-control" id="siteName" name="site_name" value="{{ settings.site_name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="siteDescription">Site Description</label>
+                            <textarea class="form-control" id="siteDescription" name="site_description" rows="3">{{ settings.site_description }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Contact Email</label>
+                            <input type="email" class="form-control" id="contactEmail" name="contact_email" value="{{ settings.contact_email }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">Contact Phone</label>
+                            <input type="tel" class="form-control" id="contactPhone" name="contact_phone" value="{{ settings.contact_phone }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea class="form-control" id="address" name="address" rows="3">{{ settings.address }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="timezone">Timezone</label>
+                            <select class="form-control" id="timezone" name="timezone" required>
+                                {% for tz in timezones %}
+                                <option value="{{ tz }}" {% if tz == settings.timezone %}selected{% endif %}>{{ tz }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateFormat">Date Format</label>
+                            <select class="form-control" id="dateFormat" name="date_format" required>
+                                <option value="Y-m-d" {% if settings.date_format == 'Y-m-d' %}selected{% endif %}>YYYY-MM-DD</option>
+                                <option value="d/m/Y" {% if settings.date_format == 'd/m/Y' %}selected{% endif %}>DD/MM/YYYY</option>
+                                <option value="m/d/Y" {% if settings.date_format == 'm/d/Y' %}selected{% endif %}>MM/DD/YYYY</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="logo">Logo</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="logo" name="logo">
+                                <label class="custom-file-label" for="logo">Choose file</label>
+                            </div>
+                            {% if settings.logo %}
+                            <div class="mt-2">
+                                <img src="{{ settings.logo.url }}" alt="Current Logo" class="img-thumbnail" style="max-height: 100px;">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Settings Tab -->
+        <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Security Settings</h6>
+                </div>
+                <div class="card-body">
+                    <form id="securitySettingsForm">
+                        <div class="form-group">
+                            <label for="passwordMinLength">Minimum Password Length</label>
+                            <input type="number" class="form-control" id="passwordMinLength" name="password_min_length" 
+                                value="{{ settings.password_min_length }}" min="8" max="32" required>
+                            <small class="form-text text-muted">Minimum length for user passwords (8-32 characters)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordRequireNumbers">Password Requirements</label>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="passwordRequireNumbers" 
+                                    name="password_require_numbers" {% if settings.password_require_numbers %}checked{% endif %}>
+                                <label class="custom-control-label" for="passwordRequireNumbers">Require numbers</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="passwordRequireUppercase" 
+                                    name="password_require_uppercase" {% if settings.password_require_uppercase %}checked{% endif %}>
+                                <label class="custom-control-label" for="passwordRequireUppercase">Require uppercase letters</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="passwordRequireSpecial" 
+                                    name="password_require_special" {% if settings.password_require_special %}checked{% endif %}>
+                                <label class="custom-control-label" for="passwordRequireSpecial">Require special characters</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sessionTimeout">Session Timeout (minutes)</label>
+                            <input type="number" class="form-control" id="sessionTimeout" name="session_timeout" 
+                                value="{{ settings.session_timeout }}" min="15" max="1440" required>
+                            <small class="form-text text-muted">Time in minutes before a user session expires (15-1440 minutes)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxLoginAttempts">Maximum Login Attempts</label>
+                            <input type="number" class="form-control" id="maxLoginAttempts" name="max_login_attempts" 
+                                value="{{ settings.max_login_attempts }}" min="3" max="10" required>
+                            <small class="form-text text-muted">Number of failed login attempts before account is locked (3-10 attempts)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="lockoutDuration">Account Lockout Duration (minutes)</label>
+                            <input type="number" class="form-control" id="lockoutDuration" name="lockout_duration" 
+                                value="{{ settings.lockout_duration }}" min="15" max="1440" required>
+                            <small class="form-text text-muted">Time in minutes an account remains locked after too many failed attempts (15-1440 minutes)</small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integrations Tab -->
+        <div class="tab-pane fade" id="integrations" role="tabpanel" aria-labelledby="integrations-tab">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Integration Settings</h6>
+                </div>
+                <div class="card-body">
+                    <form id="integrationSettingsForm">
+                        <!-- Google Analytics -->
+                        <div class="form-group">
+                            <label for="googleAnalyticsId">Google Analytics Tracking ID</label>
+                            <input type="text" class="form-control" id="googleAnalyticsId" name="google_analytics_id" 
+                                value="{{ settings.google_analytics_id }}" placeholder="UA-XXXXXXXXX-X">
+                            <small class="form-text text-muted">Enter your Google Analytics tracking ID to enable analytics tracking</small>
+                        </div>
+
+                        <!-- Social Media Integration -->
+                        <div class="form-group">
+                            <label>Social Media Links</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fab fa-facebook"></i></span>
+                                </div>
+                                <input type="url" class="form-control" id="facebookUrl" name="facebook_url" 
+                                    value="{{ settings.facebook_url }}" placeholder="Facebook Page URL">
+                            </div>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                                </div>
+                                <input type="url" class="form-control" id="twitterUrl" name="twitter_url" 
+                                    value="{{ settings.twitter_url }}" placeholder="Twitter Profile URL">
+                            </div>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
+                                </div>
+                                <input type="url" class="form-control" id="linkedinUrl" name="linkedin_url" 
+                                    value="{{ settings.linkedin_url }}" placeholder="LinkedIn Profile URL">
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fab fa-instagram"></i></span>
+                                </div>
+                                <input type="url" class="form-control" id="instagramUrl" name="instagram_url" 
+                                    value="{{ settings.instagram_url }}" placeholder="Instagram Profile URL">
+                            </div>
+                        </div>
+
+                        <!-- API Keys -->
+                        <div class="form-group">
+                            <label for="googleMapsApiKey">Google Maps API Key</label>
+                            <input type="text" class="form-control" id="googleMapsApiKey" name="google_maps_api_key" 
+                                value="{{ settings.google_maps_api_key }}">
+                            <small class="form-text text-muted">API key for Google Maps integration</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="recaptchaSiteKey">reCAPTCHA Site Key</label>
+                            <input type="text" class="form-control" id="recaptchaSiteKey" name="recaptcha_site_key" 
+                                value="{{ settings.recaptcha_site_key }}">
+                            <small class="form-text text-muted">Site key for Google reCAPTCHA integration</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="recaptchaSecretKey">reCAPTCHA Secret Key</label>
+                            <input type="password" class="form-control" id="recaptchaSecretKey" name="recaptcha_secret_key" 
+                                value="{{ settings.recaptcha_secret_key }}">
+                            <small class="form-text text-muted">Secret key for Google reCAPTCHA integration</small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Handle file input labels
+        $('.custom-file-input').on('change', function() {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+
+        // Save settings
+        $('#saveSettings').on('click', function() {
+            const forms = [
+                $('#generalSettingsForm'),
+                $('#securitySettingsForm'),
+                $('#integrationSettingsForm')
+            ];
+
+            let formData = new FormData();
+            
+            // Collect data from all forms
+            forms.forEach(form => {
+                const data = form.serializeArray();
+                data.forEach(item => {
+                    formData.append(item.name, item.value);
+                });
+            });
+
+            // Add file data if a new logo was selected
+            const logoFile = $('#logo')[0].files[0];
+            if (logoFile) {
+                formData.append('logo', logoFile);
+            }
+
+            // Send AJAX request
+            $.ajax({
+                url: '{% url "admin:save_settings" %}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.success) {
+                        showAlert('success', 'Settings saved successfully!');
+                    } else {
+                        showAlert('danger', 'Error saving settings: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showAlert('danger', 'Error saving settings: ' + error);
+                }
+            });
+        });
+
+        // Show alert message
+        function showAlert(type, message) {
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+            $('.container-fluid').prepend(alertHtml);
+            setTimeout(() => {
+                $('.alert').alert('close');
+            }, 5000);
+        }
+    });
+</script>
+{% endblock %} 

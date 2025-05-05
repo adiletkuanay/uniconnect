@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ university.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">{{ university.name }}</h1>
+                    <p class="text-muted">
+                        <i class="fas fa-map-marker-alt me-2"></i>{{ university.city }}, {{ university.country }}
+                    </p>
+                    <div class="d-flex gap-3 mb-3">
+                        <span class="badge bg-primary">Rank #{{ university.rank }}</span>
+                        <span class="badge bg-success">{{ university.programs.count }} Programs</span>
+                        <span class="badge bg-info">{{ university.students_count }} Students</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ university.website }}" class="btn btn-outline-primary" target="_blank">
+                            <i class="fas fa-globe me-2"></i>Visit Website
+                        </a>
+                        <a href="{% url 'universities:program_list' university.pk %}" class="btn btn-primary">
+                            <i class="fas fa-graduation-cap me-2"></i>View Programs
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">About</h2>
+                    <p class="card-text">{{ university.description }}</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Contact Information</h2>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i>{{ university.email }}</li>
+                        <li><i class="fas fa-phone me-2"></i>{{ university.phone }}</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>{{ university.address }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Quick Facts</h2>
+                    <ul class="list-unstyled">
+                        <li><strong>Established:</strong> {{ university.established_year }}</li>
+                        <li><strong>Accreditation:</strong> {{ university.accreditation_info }}</li>
+                        <li><strong>Total Students:</strong> {{ university.students_count }}</li>
+                        <li><strong>International Students:</strong> {{ university.international_students_count }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            {% if university.logo %}
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <img src="{{ university.logo.url }}" alt="{{ university.name }} Logo" class="img-fluid" style="max-height: 200px;">
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

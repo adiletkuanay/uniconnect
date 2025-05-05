@@ -1,0 +1,418 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UniConnect - Your gateway to international education">
+    <meta name="keywords" content="university, education, international, application, study abroad">
+    <title>{% block title %}UniConnect{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    
+    {% block extra_css %}
+    <style>
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background-color: #1A3C40;
+            padding: 80px 0;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            color: white;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .hero .btn-warning {
+            background-color: #FFB800;
+            border: none;
+            padding: 12px 32px;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .hero .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 184, 0, 0.3);
+        }
+
+        .hero .btn-outline-light {
+            border: 2px solid white;
+            padding: 12px 32px;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .hero .btn-outline-light:hover {
+            background-color: white;
+            color: #1A3C40;
+            transform: translateY(-2px);
+        }
+
+        .hero .col-lg-5 img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
+            transition: transform 0.3s ease;
+        }
+
+        .hero .col-lg-5 img:hover {
+            transform: translateY(-10px);
+        }
+
+        @media (max-width: 991px) {
+            .hero {
+                min-height: auto;
+                padding: 60px 0;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .hero .col-lg-5 {
+                margin-top: 40px;
+            }
+        }
+
+        /* Add these styles to your existing CSS */
+        .how-it-works {
+            background-color: #fff;
+        }
+
+        .how-it-works h2 {
+            color: #1A3C40;
+            font-size: 36px;
+            font-weight: 600;
+        }
+
+        .how-icon {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .how-icon:hover {
+            transform: translateY(-5px);
+        }
+
+        .arrow-icon {
+            width: 30px;
+            height: 30px;
+            opacity: 0.6;
+        }
+
+        .how-it-works h5 {
+            color: #1A3C40;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 991px) {
+            .arrow-icon {
+                transform: rotate(90deg);
+                margin: 20px 0;
+            }
+            
+            .row {
+                flex-direction: column;
+            }
+            
+            .col-auto {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .how-icon {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        /* Add these styles to your existing CSS */
+        .examples {
+            background-color: #F5F5F5;
+        }
+
+        .examples h2 {
+            color: #1A3C40;
+            font-size: 36px;
+            font-weight: 600;
+        }
+
+        .examples .card {
+            background-color: white;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .examples .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .example-img {
+            border-radius: 8px;
+        }
+
+        .examples .card-title {
+            color: #1A3C40;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .examples .fas {
+            font-size: 20px;
+        }
+
+        .examples .btn {
+            padding: 12px 32px;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .examples .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .examples .btn-warning:hover {
+            box-shadow: 0 4px 12px rgba(255, 184, 0, 0.3);
+        }
+
+        .examples .list-unstyled li {
+            padding: 8px 0;
+        }
+
+        .example-card {
+            border: 2px solid #1A3C40;
+            border-radius: 16px;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        .example-card .card-body {
+            padding: 0;
+        }
+
+        .example-header {
+            padding: 20px;
+            background-color: #E6EEF0;
+            border-bottom: 2px solid #1A3C40;
+        }
+
+        .example-img-container {
+            background-color: #E6EEF0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .example-img {
+            width: 280px;
+            height: 200px;
+            object-fit: contain;
+        }
+
+        .steps-container {
+            background-color: white;
+            padding: 24px;
+        }
+
+        .step-icon {
+            width: 28px;
+            height: 28px;
+            color: #1A3C40;
+        }
+
+        .step-text {
+            color: #1A3C40;
+            font-size: 16px;
+        }
+
+        .examples .btn {
+            border-radius: 25px;
+            padding: 12px 32px;
+            font-weight: 600;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1A3C40;">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'core:home' %}">
+                <img src="{% static 'images/logo.png' %}" alt="UniConnect" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link scroll-link" href="#how-it-works">How it works?</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:profile' %}">My profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'applications:program_list' %}">Find a University</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'applications:application_list' %}">Application Tracker</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:support' %}">Support</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>{{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'users:profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:settings' %}">Settings</a></li>
+                            {% if user.is_staff %}
+                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin Panel</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:register' %}">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Navigation</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#how-it-works" class="text-white scroll-link">How it works?</a></li>
+                        <li><a href="{% url 'users:profile' %}" class="text-white">My profile</a></li>
+                        <li><a href="{% url 'applications:program_list' %}" class="text-white">Find a University</a></li>
+                        <li><a href="{% url 'core:about' %}" class="text-white">About</a></li>
+                        <li><a href="{% url 'core:support' %}" class="text-white">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'core:support' %}" class="text-white">Help Center</a></li>
+                        <li><a href="{% url 'core:contact' %}" class="text-white">Contact Us</a></li>
+                        <li><a href="{% url 'core:privacy' %}" class="text-white">Privacy Policy</a></li>
+                        <li><a href="{% url 'core:terms' %}" class="text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>About us</h5>
+                    <p>UniConnect is your comprehensive platform for university applications, making the process simple and efficient.</p>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; {% now "Y" %} UniConnect. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="{% url 'core:privacy' %}" class="text-white me-3">Privacy Policy</a>
+                    <a href="{% url 'core:terms' %}" class="text-white">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add smooth scrolling to all links with class 'scroll-link'
+        document.querySelectorAll('.scroll-link').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    // Get the height of the fixed navbar
+                    const navbar = document.querySelector('.navbar');
+                    const navbarHeight = navbar ? navbar.offsetHeight : 0;
+                    
+                    // Calculate the target position with offset for the navbar
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                } else if (window.location.pathname !== '/') {
+                    // If we're not on the home page, redirect to home page with hash
+                    window.location.href = '{% url "core:home" %}' + '#' + targetId;
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html> 

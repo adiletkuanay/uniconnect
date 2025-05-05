@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Confirmation - UniConnect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+        }
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+        .content {
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .program-details {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-size: 12px;
+            color: #666;
+        }
+        .steps {
+            margin: 20px 0;
+        }
+        .step {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .step:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #007bff;
+        }
+        .contact-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ logo_url }}" alt="UniConnect Logo" class="logo">
+        </div>
+        
+        <div class="content">
+            <h1>Application Confirmation</h1>
+            
+            <p>Dear {{ first_name }},</p>
+            
+            <p>Thank you for submitting your application through UniConnect. We have received your application for the following program:</p>
+            
+            <div class="program-details">
+                <h2>{{ program.title }}</h2>
+                <p><strong>University:</strong> {{ program.university.name }}</p>
+                <p><strong>Degree Level:</strong> {{ program.degree_level }}</p>
+                <p><strong>Start Date:</strong> {{ program.start_date }}</p>
+                <p><strong>Application ID:</strong> {{ application_id }}</p>
+            </div>
+            
+            <h2>Next Steps</h2>
+            <div class="steps">
+                <div class="step">Document Verification: Our team will review your submitted documents.</div>
+                <div class="step">Application Review: The university will evaluate your application.</div>
+                <div class="step">Decision Notification: You will be notified of the admission decision.</div>
+            </div>
+            
+            <p>You can track the status of your application by clicking the button below:</p>
+            
+            <div style="text-align: center;">
+                <a href="{{ application_status_url }}" class="button">View Application Status</a>
+            </div>
+            
+            <div class="contact-info">
+                <p>If you have any questions or need assistance, please contact our support team:</p>
+                <p>Email: <a href="mailto:support@uniconnect.com">support@uniconnect.com</a></p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated message. Please do not reply to this email.</p>
+            <p>&copy; {% now "Y" %} UniConnect. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html> 

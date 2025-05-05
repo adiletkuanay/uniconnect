@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <!-- Program Overview -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="mb-0">{{ program.title }}</h2>
+                    <p class="text-muted mb-0">{{ program.university.name }}</p>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="program-info">
+                                <p><strong>Degree Level:</strong> {{ program.get_degree_level_display }}</p>
+                                <p><strong>Field of Study:</strong> {{ program.field_of_study }}</p>
+                                <p><strong>Duration:</strong> {{ program.duration }} months</p>
+                                <p><strong>Language:</strong> {{ program.language }}</p>
+                                <p><strong>Start Date:</strong> {{ program.start_date }}</p>
+                                <p><strong>Application Deadline:</strong> {{ program.application_deadline }}</p>
+                                <p><strong>Minimum GPA:</strong> {{ program.min_gpa }}</p>
+                                <p><strong>Tuition Fee:</strong> ${{ program.tuition_fee }}</p>
+                                {% if program.scholarship_available %}
+                                    <p><strong>Scholarship:</strong> Available</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="requirements">
+                                <h4>English Requirements</h4>
+                                <p>{{ program.english_requirement }}</p>
+                                
+                                {% if program.other_requirements %}
+                                <h4>Other Requirements</h4>
+                                <p>{{ program.other_requirements }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="program-description mb-4">
+                        <h4>Program Description</h4>
+                        <p>{{ program.description }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0">Student Testimonials</h3>
+                </div>
+                <div class="card-body">
+                    {% for testimonial in program.testimonial_set.all %}
+                    <div class="testimonial mb-4">
+                        <div class="d-flex align-items-center mb-2">
+                            {% if testimonial.photo %}
+                            <img src="{{ testimonial.photo.url }}" alt="{{ testimonial.student_name }}" class="rounded-circle me-3" width="50">
+                            {% endif %}
+                            <div>
+                                <h5 class="mb-0">{{ testimonial.student_name }}</h5>
+                                <p class="text-muted mb-0">Class of {{ testimonial.graduation_year }}</p>
+                            </div>
+                        </div>
+                        <p>{{ testimonial.content }}</p>
+                        {% if testimonial.current_position %}
+                        <p class="text-muted"><em>Current Position: {{ testimonial.current_position }}</em></p>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No testimonials available yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'applications:application_create' program.id %}" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Apply Now
+                        </a>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#contactModal">
+                            <i class="fas fa-envelope"></i> Contact Coordinator
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#testimonialModal">
+                            <i class="fas fa-comment"></i> Share Your Experience
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Contact Program Coordinator</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'applications:contact_coordinator' program.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        <input type="text" class="form-control" name="subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonial Modal -->
+<div class="modal fade" id="testimonialModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Share Your Experience</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'applications:testimonial_create' program.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Your Name</label>
+                        <input type="text" class="form-control" name="student_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Graduation Year</label>
+                        <input type="number" class="form-control" name="graduation_year" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Your Experience</label>
+                        <textarea class="form-control" name="content" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Current Position</label>
+                        <input type="text" class="form-control" name="current_position">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Your Photo (Optional)</label>
+                        <input type="file" class="form-control" name="photo" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Testimonial</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

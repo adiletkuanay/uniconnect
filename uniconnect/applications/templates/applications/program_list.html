@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Search and Filter Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="search" placeholder="Search programs..." value="{{ request.GET.search }}">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="degree_level">
+                        <option value="">All Degree Levels</option>
+                        {% for value, label in degree_levels %}
+                        <option value="{{ value }}" {% if request.GET.degree_level == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="university">
+                        <option value="">All Universities</option>
+                        {% for university in universities %}
+                        <option value="{{ university.id }}" {% if request.GET.university == university.id|stringformat:"i" %}selected{% endif %}>{{ university.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="language">
+                        <option value="">All Languages</option>
+                        {% for value, label in languages %}
+                        <option value="{{ value }}" {% if request.GET.language == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Programs Grid -->
+    <div class="row">
+        {% for program in programs %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ program.title }}</h5>
+                        <span class="badge bg-primary">{{ program.get_degree_level_display }}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="text-muted">{{ program.university.name }}</h6>
+                        <p class="mb-2"><strong>Field of Study:</strong> {{ program.field_of_study }}</p>
+                        <p class="mb-2"><strong>Duration:</strong> {{ program.duration }} months</p>
+                        <p class="mb-2"><strong>Language:</strong> {{ program.language }}</p>
+                        <p class="mb-2"><strong>Start Date:</strong> {{ program.start_date|date:"F Y" }}</p>
+                        <p class="mb-2"><strong>Application Deadline:</strong> {{ program.application_deadline|date:"F d, Y" }}</p>
+                    </div>
+                    <div class="program-requirements">
+                        <h6>Requirements:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Minimum GPA: {{ program.min_gpa }}</li>
+                            <li><i class="fas fa-check text-success"></i> English Requirement: {{ program.english_requirement }}</li>
+                            {% if program.scholarship_available %}
+                            <li><i class="fas fa-check text-success"></i> Scholarships Available</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'program_detail' program.id %}" class="btn btn-outline-primary">
+                            <i class="fas fa-info-circle"></i> View Details
+                        </a>
+                        <a href="{% url 'application_create' program.id %}" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Apply Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No programs found matching your criteria.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav aria-label="Program pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.degree_level %}&degree_level={{ request.GET.degree_level }}{% endif %}{% if request.GET.university %}&university={{ request.GET.university }}{% endif %}{% if request.GET.language %}&language={{ request.GET.language }}{% endif %}">First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.degree_level %}&degree_level={{ request.GET.degree_level }}{% endif %}{% if request.GET.university %}&university={{ request.GET.university }}{% endif %}{% if request.GET.language %}&language={{ request.GET.language }}{% endif %}">Previous</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.degree_level %}&degree_level={{ request.GET.degree_level }}{% endif %}{% if request.GET.university %}&university={{ request.GET.university }}{% endif %}{% if request.GET.language %}&language={{ request.GET.language }}{% endif %}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.degree_level %}&degree_level={{ request.GET.degree_level }}{% endif %}{% if request.GET.university %}&university={{ request.GET.university }}{% endif %}{% if request.GET.language %}&language={{ request.GET.language }}{% endif %}">Last</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %} 

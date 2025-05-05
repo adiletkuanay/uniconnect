@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Overview Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <h2 class="mb-0">{{ total_users }}</h2>
+                    <small>+{{ new_users_today }} today</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Active Applications</h5>
+                    <h2 class="mb-0">{{ active_applications }}</h2>
+                    <small>{{ pending_reviews }} pending review</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Documents</h5>
+                    <h2 class="mb-0">{{ total_documents }}</h2>
+                    <small>{{ pending_verification }} pending verification</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Universities</h5>
+                    <h2 class="mb-0">{{ total_universities }}</h2>
+                    <small>{{ active_programs }} active programs</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Quick Actions -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'admin:user_add' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-user-plus me-2"></i>Add New User
+                    </a>
+                    <a href="{% url 'admin:university_add' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-university me-2"></i>Add University
+                    </a>
+                    <a href="{% url 'admin:program_add' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-graduation-cap me-2"></i>Add Program
+                    </a>
+                    <a href="{% url 'admin:document_verification' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-alt me-2"></i>Verify Documents
+                    </a>
+                    <a href="{% url 'admin:application_review' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-clipboard-check me-2"></i>Review Applications
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for activity in recent_activities %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <small class="text-muted">{{ activity.timestamp|timesince }} ago</small>
+                        </div>
+                        <p class="mb-1">{{ activity.description }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Pending Applications -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Pending Applications</h5>
+                    <a href="{% url 'admin:application_list' %}" class="btn btn-light btn-sm">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Student</th>
+                                <th>Program</th>
+                                <th>Status</th>
+                                <th>Submitted</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for application in pending_applications %}
+                            <tr>
+                                <td>{{ application.id }}</td>
+                                <td>{{ application.student.get_full_name }}</td>
+                                <td>{{ application.program.title }}</td>
+                                <td>
+                                    <span class="badge bg-warning">{{ application.status }}</span>
+                                </td>
+                                <td>{{ application.submitted_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'admin:application_review' application.id %}" class="btn btn-sm btn-primary">Review</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pending Document Verification -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Pending Document Verification</h5>
+                    <a href="{% url 'admin:document_list' %}" class="btn btn-light btn-sm">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Student</th>
+                                <th>Type</th>
+                                <th>Uploaded</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in pending_documents %}
+                            <tr>
+                                <td>{{ document.id }}</td>
+                                <td>{{ document.student.get_full_name }}</td>
+                                <td>{{ document.document_type }}</td>
+                                <td>{{ document.uploaded_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <span class="badge bg-warning">{{ document.status }}</span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'admin:document_verify' document.id %}" class="btn btn-sm btn-primary">Verify</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Users -->
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Users</h5>
+                    <a href="{% url 'admin:user_list' %}" class="btn btn-light btn-sm">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Joined</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in recent_users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.get_full_name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                                <td>
+                                    <span class="badge {% if user.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                                        {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'admin:user_edit' user.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

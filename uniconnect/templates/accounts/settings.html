@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Settings Navigation -->
+            <div class="card">
+                <div class="list-group list-group-flush">
+                    <a href="#account" class="list-group-item list-group-item-action active" data-bs-toggle="tab">
+                        <i class="fas fa-user-cog me-2"></i>Account Settings
+                    </a>
+                    <a href="#notifications" class="list-group-item list-group-item-action" data-bs-toggle="tab">
+                        <i class="fas fa-bell me-2"></i>Notifications
+                    </a>
+                    <a href="#security" class="list-group-item list-group-item-action" data-bs-toggle="tab">
+                        <i class="fas fa-shield-alt me-2"></i>Security
+                    </a>
+                    <a href="#privacy" class="list-group-item list-group-item-action" data-bs-toggle="tab">
+                        <i class="fas fa-lock me-2"></i>Privacy
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="tab-content">
+                <!-- Account Settings -->
+                <div class="tab-pane fade show active" id="account">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Account Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="account">
+                                
+                                <div class="mb-3">
+                                    <label for="id_username" class="form-label">Username</label>
+                                    <input type="text" name="username" id="id_username" class="form-control" value="{{ user.username }}" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_language" class="form-label">Preferred Language</label>
+                                    <select name="language" id="id_language" class="form-select">
+                                        <option value="en" {% if user.profile.language == 'en' %}selected{% endif %}>English</option>
+                                        <option value="es" {% if user.profile.language == 'es' %}selected{% endif %}>Spanish</option>
+                                        <option value="fr" {% if user.profile.language == 'fr' %}selected{% endif %}>French</option>
+                                        <option value="de" {% if user.profile.language == 'de' %}selected{% endif %}>German</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_timezone" class="form-label">Timezone</label>
+                                    <select name="timezone" id="id_timezone" class="form-select">
+                                        {% for tz in timezones %}
+                                        <option value="{{ tz }}" {% if user.profile.timezone == tz %}selected{% endif %}>{{ tz }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Save Account Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="tab-pane fade" id="notifications">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Notification Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="notifications">
+                                
+                                <h6 class="mb-3">Email Notifications</h6>
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" name="email_application_updates" id="id_email_application_updates" class="form-check-input" {% if user.profile.email_application_updates %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_email_application_updates">Application Status Updates</label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" name="email_document_updates" id="id_email_document_updates" class="form-check-input" {% if user.profile.email_document_updates %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_email_document_updates">Document Verification Updates</label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" name="email_newsletter" id="id_email_newsletter" class="form-check-input" {% if user.profile.email_newsletter %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_email_newsletter">Newsletter and Updates</label>
+                                </div>
+                                
+                                <h6 class="mb-3 mt-4">Push Notifications</h6>
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" name="push_application_updates" id="id_push_application_updates" class="form-check-input" {% if user.profile.push_application_updates %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_push_application_updates">Application Status Updates</label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" name="push_document_updates" id="id_push_document_updates" class="form-check-input" {% if user.profile.push_document_updates %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_push_document_updates">Document Verification Updates</label>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Save Notification Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="tab-pane fade" id="security">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Security Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="security">
+                                
+                                <div class="mb-3">
+                                    <label for="id_current_password" class="form-label">Current Password</label>
+                                    <input type="password" name="current_password" id="id_current_password" class="form-control" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_new_password" class="form-label">New Password</label>
+                                    <input type="password" name="new_password" id="id_new_password" class="form-control" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_confirm_password" class="form-label">Confirm New Password</label>
+                                    <input type="password" name="confirm_password" id="id_confirm_password" class="form-control" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="two_factor" id="id_two_factor" class="form-check-input" {% if user.profile.two_factor_enabled %}checked{% endif %}>
+                                        <label class="form-check-label" for="id_two_factor">Enable Two-Factor Authentication</label>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Update Security Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings -->
+                <div class="tab-pane fade" id="privacy">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Privacy Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="privacy">
+                                
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="profile_visibility" id="id_profile_visibility" class="form-check-input" {% if user.profile.profile_public %}checked{% endif %}>
+                                        <label class="form-check-label" for="id_profile_visibility">Make Profile Public</label>
+                                    </div>
+                                    <small class="text-muted">If enabled, other users can view your profile information.</small>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="show_achievements" id="id_show_achievements" class="form-check-input" {% if user.profile.show_achievements %}checked{% endif %}>
+                                        <label class="form-check-label" for="id_show_achievements">Show Achievements</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="show_applications" id="id_show_applications" class="form-check-input" {% if user.profile.show_applications %}checked{% endif %}>
+                                        <label class="form-check-label" for="id_show_applications">Show Applications</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_data_retention" class="form-label">Data Retention Period</label>
+                                    <select name="data_retention" id="id_data_retention" class="form-select">
+                                        <option value="30" {% if user.profile.data_retention == 30 %}selected{% endif %}>30 days</option>
+                                        <option value="90" {% if user.profile.data_retention == 90 %}selected{% endif %}>90 days</option>
+                                        <option value="180" {% if user.profile.data_retention == 180 %}selected{% endif %}>180 days</option>
+                                        <option value="365" {% if user.profile.data_retention == 365 %}selected{% endif %}>1 year</option>
+                                    </select>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Save Privacy Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Form validation
+    (function() {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}
+{% endblock %} 

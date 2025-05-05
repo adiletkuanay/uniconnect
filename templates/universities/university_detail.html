@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ university.name }} - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- University Header -->
+    <div class="row mb-4">
+        {% if university.logo %}
+        <div class="col-md-3">
+            <img src="{{ university.logo.url }}" alt="{{ university.name }}" class="img-fluid rounded shadow">
+        </div>
+        {% endif %}
+        <div class="col-md-9">
+            <h1 class="mb-3">{{ university.name }}</h1>
+            <p class="lead text-muted">
+                <i class="fas fa-map-marker-alt me-2"></i>{{ university.city }}, {{ university.country.name }}
+            </p>
+            <div class="d-flex gap-3 mb-3">
+                <span class="badge bg-primary">Rank #{{ university.rank }}</span>
+                <span class="badge bg-success">{{ university.programs.count }} Programs</span>
+                <span class="badge bg-info">{{ university.students_count }} Students</span>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ university.website }}" class="btn btn-outline-primary" target="_blank">
+                    <i class="fas fa-globe me-2"></i>Visit Website
+                </a>
+                <a href="{% url 'universities:program_list' university.pk %}" class="btn btn-primary">
+                    <i class="fas fa-graduation-cap me-2"></i>View Programs
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- University Information -->
+    <div class="row">
+        <div class="col-md-8">
+            <!-- About Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4">About {{ university.name }}</h2>
+                    <p class="card-text">{{ university.description }}</p>
+                </div>
+            </div>
+
+            <!-- Programs Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4">Available Programs</h2>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Degree Level</th>
+                                    <th>Duration</th>
+                                    <th>Language</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for program in university.programs.all %}
+                                <tr>
+                                    <td>{{ program.title }}</td>
+                                    <td>{{ program.get_degree_level_display }}</td>
+                                    <td>{{ program.duration }} months</td>
+                                    <td>{{ program.get_language_display }}</td>
+                                    <td>
+                                        <a href="{% url 'applications:program_detail' program.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Facilities Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title h4">Facilities</h2>
+                    <div class="row g-4">
+                        {% for facility in university.facilities.all %}
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                    <i class="fas {{ facility.icon }} fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">{{ facility.name }}</h5>
+                                    <p class="mb-0 text-muted">{{ facility.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Quick Facts -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title h5">Quick Facts</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>Founded:</strong> {{ university.established_year }}
+                        </li>
+                        <li class="mb-3">
+                            <strong>Type:</strong> {{ university.type }}
+                        </li>
+                        <li class="mb-3">
+                            <strong>Total Students:</strong> {{ university.students_count }}
+                        </li>
+                        <li class="mb-3">
+                            <strong>International Students:</strong> {{ university.international_students_count }}
+                        </li>
+                        <li class="mb-3">
+                            <strong>Student:Staff Ratio:</strong> {{ university.student_staff_ratio }}
+                        </li>
+                        <li class="mb-3">
+                            <strong>Acceptance Rate:</strong> {{ university.acceptance_rate }}%
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title h5">Contact Information</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <i class="fas fa-envelope me-2"></i>
+                            <a href="mailto:{{ university.email }}">{{ university.email }}</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-phone me-2"></i>
+                            <a href="tel:{{ university.phone }}">{{ university.phone }}</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            {{ university.address }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title h5">Connect With Us</h3>
+                    <div class="d-flex gap-3">
+                        {% if university.facebook %}
+                        <a href="{{ university.facebook }}" class="text-primary" target="_blank">
+                            <i class="fab fa-facebook-f fa-2x"></i>
+                        </a>
+                        {% endif %}
+                        {% if university.twitter %}
+                        <a href="{{ university.twitter }}" class="text-info" target="_blank">
+                            <i class="fab fa-twitter fa-2x"></i>
+                        </a>
+                        {% endif %}
+                        {% if university.instagram %}
+                        <a href="{{ university.instagram }}" class="text-danger" target="_blank">
+                            <i class="fab fa-instagram fa-2x"></i>
+                        </a>
+                        {% endif %}
+                        {% if university.linkedin %}
+                        <a href="{{ university.linkedin }}" class="text-primary" target="_blank">
+                            <i class="fab fa-linkedin-in fa-2x"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

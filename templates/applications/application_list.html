@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Application Tracker" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">{% trans "Applications" %}</h2>
+                    {% if user.role == 'student' %}
+                    <a href="{% url 'applications:program_list' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> {% trans "Apply to Program" %}
+                    </a>
+                    {% endif %}
+    </div>
+                <div class="card-body">
+                    <!-- Status Filter -->
+                    <div class="mb-4">
+                        <div class="btn-group" role="group">
+                            <a href="?status=all" class="btn btn-outline-primary {% if current_filter == 'all' %}active{% endif %}">
+                                {% trans "All" %} ({{ stats.all }})
+                            </a>
+                            <a href="?status=pending" class="btn btn-outline-warning {% if current_filter == 'pending' %}active{% endif %}">
+                                {% trans "Pending" %} ({{ stats.pending }})
+                            </a>
+                            <a href="?status=approved" class="btn btn-outline-success {% if current_filter == 'approved' %}active{% endif %}">
+                                {% trans "Approved" %} ({{ stats.approved }})
+                            </a>
+                            <a href="?status=rejected" class="btn btn-outline-danger {% if current_filter == 'rejected' %}active{% endif %}">
+                                {% trans "Rejected" %} ({{ stats.rejected }})
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Applications Table -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    {% if user.role != 'student' %}
+                                    <th>{% trans "Applicant" %}</th>
+                                    {% endif %}
+                                    <th>{% trans "Program" %}</th>
+                                    <th>{% trans "University" %}</th>
+                                    <th>{% trans "Status" %}</th>
+                                    <th>{% trans "Submitted" %}</th>
+                                    <th>{% trans "Actions" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for application in applications %}
+                                <tr>
+                                    {% if user.role != 'student' %}
+                                    <td>{{ application.applicant.get_full_name }}</td>
+                                    {% endif %}
+                                    <td>{{ application.program.title }}</td>
+                                    <td>{{ application.program.university.name }}</td>
+                                    <td>
+                                        <span class="badge {% if application.status == 'pending' %}bg-warning text-dark
+                                                  {% elif application.status == 'approved' %}bg-success text-white
+                                                  {% elif application.status == 'rejected' %}bg-danger text-white
+                                                  {% else %}bg-secondary text-white{% endif %}">
+                                            {{ application.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ application.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'applications:application_detail' application.id %}" class="btn btn-sm btn-info text-white">
+                                            <i class="fas fa-eye"></i> {% trans "View" %}
+                                        </a>
+                                        {% if user.role == 'university_admin' and application.status != 'draft' %}
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class="fas fa-edit"></i> {% trans "Update Status" %}
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <form method="post" action="{% url 'applications:application_review' application.id %}">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="status" value="approved">
+                                                        <button type="submit" class="dropdown-item text-success">
+                                                            <i class="fas fa-check"></i> {% trans "Approve" %}
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form method="post" action="{% url 'applications:application_review' application.id %}">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="status" value="rejected">
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="fas fa-times"></i> {% trans "Reject" %}
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form method="post" action="{% url 'applications:application_review' application.id %}">
+                                {% csrf_token %}
+                                                        <input type="hidden" name="status" value="pending">
+                                                        <button type="submit" class="dropdown-item text-warning">
+                                                            <i class="fas fa-clock"></i> {% trans "Mark as Pending" %}
+                                </button>
+                            </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        {% if user.role == 'student' %}
+                                            <p class="mb-3">{% trans "You haven't submitted any applications yet." %}</p>
+                                            <a href="{% url 'applications:program_list' %}" class="btn btn-primary">
+                                                <i class="fas fa-plus"></i> {% trans "Browse Programs" %}
+                        </a>
+                                        {% else %}
+                                            {% trans "No applications found." %}
+                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-box {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        min-width: 120px;
+    }
+
+    .stat-box.active {
+        background: #e3f2fd;
+    }
+
+    .stat-box .number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1976d2;
+        display: block;
+    }
+
+    .stat-box .stat-label {
+        color: #666;
+        text-decoration: none;
+    }
+
+    .university-logo {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+    }
+
+    .university-logo-placeholder {
+        width: 50px;
+        height: 50px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+    }
+
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .status-draft {
+        background: #fff3e0;
+        color: #f57c00;
+    }
+
+    .status-accepted {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .status-rejected {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .status-submitted {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Enable Bootstrap dropdowns
+    document.addEventListener('DOMContentLoaded', function() {
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl)
+        })
+    });
+</script>
+{% endblock %} 

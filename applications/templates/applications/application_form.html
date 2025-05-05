@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="mb-0">{% if form.instance.id %}Edit Application{% else %}New Application{% endif %}</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Academic Information</h5>
+                        <div class="mb-3">
+                            <label for="{{ form.high_school_gpa.id_for_label }}" class="form-label">High School GPA</label>
+                            {{ form.high_school_gpa }}
+                            {% if form.high_school_gpa.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.high_school_gpa.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.unt_score.id_for_label }}" class="form-label">UNT Score</label>
+                            {{ form.unt_score }}
+                            {% if form.unt_score.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.unt_score.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.english_proficiency_type.id_for_label }}" class="form-label">English Proficiency Test</label>
+                            {{ form.english_proficiency_type }}
+                            {% if form.english_proficiency_type.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.english_proficiency_type.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.english_proficiency_score.id_for_label }}" class="form-label">English Proficiency Score</label>
+                            {{ form.english_proficiency_score }}
+                            {% if form.english_proficiency_score.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.english_proficiency_score.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5>Additional Information</h5>
+                        <div class="mb-3">
+                            <label for="{{ form.personal_statement.id_for_label }}" class="form-label">Personal Statement</label>
+                            {{ form.personal_statement }}
+                            {% if form.personal_statement.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.personal_statement.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.achievements.id_for_label }}" class="form-label">Achievements</label>
+                            {{ form.achievements }}
+                            {% if form.achievements.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.achievements.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.extracurricular_activities.id_for_label }}" class="form-label">Extracurricular Activities</label>
+                            {{ form.extracurricular_activities }}
+                            {% if form.extracurricular_activities.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.extracurricular_activities.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Additional Requests</h5>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_scholarship_requested }}
+                                <label class="form-check-label" for="{{ form.is_scholarship_requested.id_for_label }}">
+                                    Request Scholarship
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_dormitory_requested }}
+                                <label class="form-check-label" for="{{ form.is_dormitory_requested.id_for_label }}">
+                                    Request Dormitory
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5>Application Notes</h5>
+                        <div class="mb-3">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label">Notes</label>
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.notes.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'applications:application_list' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Add Bootstrap classes to form fields
+    document.querySelectorAll('input, select, textarea').forEach(element => {
+        element.classList.add('form-control');
+    });
+    
+    // Add specific classes for checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(element => {
+        element.classList.remove('form-control');
+        element.classList.add('form-check-input');
+    });
+</script>
+{% endblock %}
+{% endblock %} 

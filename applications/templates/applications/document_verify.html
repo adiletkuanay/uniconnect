@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block title %}Document Verification - UniConnect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4">Document Verification</h1>
+            <p class="lead">Review and verify student documents for applications.</p>
+        </div>
+    </div>
+
+    <!-- Document List -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Pending Documents</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for document in pending_documents %}
+                        <a href="#document-{{ document.id }}" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ document.get_document_type_display }}</h6>
+                                <small class="text-muted">{{ document.upload_date|date:"M d, Y" }}</small>
+                            </div>
+                            <p class="mb-1">{{ document.application.student.user.get_full_name }}</p>
+                            <small class="text-muted">{{ document.application.program.title }}</small>
+                        </a>
+                        {% empty %}
+                        <div class="list-group-item">
+                            <p class="mb-0 text-muted">No pending documents to verify.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Preview and Verification -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    {% if selected_document %}
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="card-title mb-1">{{ selected_document.get_document_type_display }}</h5>
+                            <p class="text-muted mb-0">
+                                {{ selected_document.application.student.user.get_full_name }} - 
+                                {{ selected_document.application.program.title }}
+                            </p>
+                        </div>
+                        <div>
+                            <span class="badge bg-{{ selected_document.status|status_color }}">
+                                {{ selected_document.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Document Preview -->
+                    <div class="document-preview mb-4">
+                        {% if selected_document.file.name|lower|slice:"-4:" == ".pdf" %}
+                        <iframe src="{{ selected_document.file.url }}" class="w-100" style="height: 500px;"></iframe>
+                        {% else %}
+                        <img src="{{ selected_document.file.url }}" class="img-fluid" alt="Document Preview">
+                        {% endif %}
+                    </div>
+
+                    <!-- Verification Form -->
+                    <form method="post" action="{% url 'applications:verify_document' selected_document.id %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Verification Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="">Select status</option>
+                                <option value="verified" {% if selected_document.status == 'verified' %}selected{% endif %}>Verified</option>
+                                <option value="rejected" {% if selected_document.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Verification Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3">{{ selected_document.verification_notes }}</textarea>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="notify_student" name="notify_student">
+                            <label class="form-check-label" for="notify_student">Notify student of status change</label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ selected_document.file.url }}" class="btn btn-outline-primary" download>
+                                <i class="fas fa-download me-2"></i>Download
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check me-2"></i>Save Verification
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Verification History -->
+                    <div class="mt-4">
+                        <h6>Verification History</h6>
+                        <div class="list-group">
+                            {% for verification in selected_document.verification_history.all %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ verification.verified_by.get_full_name }}</h6>
+                                    <small class="text-muted">{{ verification.verification_date|date:"M d, Y H:i" }}</small>
+                                </div>
+                                <p class="mb-1">
+                                    <span class="badge bg-{{ verification.status|status_color }}">
+                                        {{ verification.get_status_display }}
+                                    </span>
+                                </p>
+                                {% if verification.notes %}
+                                <p class="mb-0 text-muted">{{ verification.notes }}</p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Select a document to verify</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.document-preview {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.document-preview iframe,
+.document-preview img {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+}
+
+.list-group-item {
+    transition: background-color 0.2s;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5em 0.75em;
+}
+</style>
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Handle document selection
+    $('.list-group-item').on('click', function(e) {
+        e.preventDefault();
+        $('.list-group-item').removeClass('active');
+        $(this).addClass('active');
+        window.location.hash = $(this).attr('href');
+    });
+
+    // Handle status change
+    $('#status').on('change', function() {
+        const status = $(this).val();
+        if (status === 'rejected') {
+            $('#notes').prop('required', true);
+        } else {
+            $('#notes').prop('required', false);
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 
